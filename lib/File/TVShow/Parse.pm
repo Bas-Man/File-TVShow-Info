@@ -6,7 +6,7 @@ use warnings;
 
 =head1 NAME
 
-File::TVShow::Parse - The great new File::TVShow::Parse!
+File::TVShow::Parse
 
 =head1 VERSION
 
@@ -19,35 +19,178 @@ our $VERSION = '0.01';
 
 =head1 SYNOPSIS
 
-Quick summary of what the module does.
+This module is intended to parse and identify information in the file name of a TV show. These details can then be accessed
+by calling the relavent methods. It makes B<NO> attempt to read the contents of the file.
 
-Perhaps a little code snippet.
+If the file name is parsed and can not be identified as a TV show then L</is_tv_show> will return 0.
 
     use File::TVShow::Parse;
 
-    my $foo = File::TVShow::Parse->new();
-    ...
-
-=head1 EXPORT
-
-A list of functions that can be exported.  You can delete this section
-if you don't export anything, such as for a purely object-oriented module.
-
-=head1 SUBROUTINES/METHODS
-
-=head2 function1
+    my $show = File::TVShow::Parse->new('file');
 
 =cut
 
-sub function1 {
-}
+@filePatterns = (
+        { # TV Show Support -   By Date no Season or Episode
+                # Perl > v5.10
+                re => '(?<name>.*?)[.\s](?<year>\d{4})[.\s](?<month>\d{1,2})[.\s](?<date>\d{1,2})(?:[.\s](?<epname>.*)|)$',
 
-=head2 function2
+                # Perl < v5.10
+                re_compat => '(.*?)[.\s](\d{4})[.\s](\d{1,2})[.\s](\d{1,2})(?:[.\s](.*)|)$',
+                keys_compat => [qw(filename name year month date epname ext)],
+
+                test_funcs => [1, 0], # TV Episode
+                test_keys => [qw(filename name year month date epname ext)],
+                test_files => [
+                        ['Series Name.2018.01.03.Episode_name.avi', 'Series Name', '2018', '01', '03', 'Episode_name', 'avi'],
+                        ['Series Name 2018 02 03 Episode_name.avi', 'Series Name', '2018', '02', '03', 'Episode_name', 'avi'],
+                        ['Series.Name.2018.03.03.Episode_name.avi', 'Series.Name', '2018', '03', '03', 'Episode_name', 'avi'],
+                        ['Series Name 2018 04 03.avi', 'Series Name', '2018', '04', '03', undef, 'avi'],
+                        ['Series.Name.2018.05.03.avi', 'Series.Name', '2018', '05', '03', undef, 'avi'],
+                ],
+        },
+        { # TV Show Support - SssEee or Season_ss_Episode_ss
+                # Perl > v5.10
+                re => '^(?:(?<name>.*?)[\/\s._-]+)?(?:s|se|season|series)[\s._-]?(?<season>\d{1,2})[x\/\s._-]*(?:e|ep|episode|[\/\s._-]+)[\s._-]?(?<episode>\d{1,2})(?:-?(?:(?:e|ep)[\s._]*)?(?<endep>\d{1,2}))?(?:[\s._]?(?:p|part)[\s._]?(?<part>\d+))?(?<subep>[a-z])?(?:[\/\s._-]*(?<epname>[^\/]+?))?$',
+
+                # Perl < v5.10
+                re_compat => '^(?:(.*?)[\/\s._-]+)?(?:s|se|season|series)[\s._-]?(\d{1,2})[x\/\s._-]*(?:e|ep|episode|[\/\s._-]+)[\s._-]?(\d{1,2})(?:-?(?:(?:e|ep)[\s._]*)?(\d{1,2}))?(?:[\s._]?(?:p|part)[\s._]?(\d+))?([a-z])?(?:[\/\s._-]*([^\/]+?))?$',
+                keys_compat => [qw(name season episode endep part subep epname)],
+
+                test_funcs => [1, 1], # TV Episode
+                test_keys => [qw(filename name guess-name season episode endep part subep epname ext)],
+                test_files => [
+                        ['Series Name.S01E02.Episode_name.avi', 'Series Name', undef, 1, 2, undef, undef, undef, 'Episode_name', 'avi'],
+                        ['Series Name S01E02.Episode_name.avi', 'Series Name', undef, 1, 2, undef, undef, undef, 'Episode_name', 'avi'],
+                        ['Series Name S01E02/Episode_name.avi', 'Series Name', undef, 1, 2, undef, undef, undef, 'Episode_name', 'avi'],
+                        ['Series/Name S01E02/Episode_name.avi', 'Name', 'Series Name', 1, 2, undef, undef, undef, 'Episode_name', 'avi'],
+                        ['Series Name.S01E02a.Episode_name.avi', 'Series Name', undef, 1, 2, undef, undef, 'a', 'Episode_name', 'avi'],
+                        ['Series Name.S01E02p4.Episode_name.avi', 'Series Name', undef, 1, 2, undef, 4, undef, 'Episode_name', 'avi'],
+                        ['Series Name.S01E02-03.Episode_name.avi', 'Series Name', undef, 1, 2, 3, undef, undef, 'Episode_name', 'avi'],
+                        ['Series Name.S01E02-E03.Episode_name.avi', 'Series Name', undef, 1, 2, 3, undef, undef, 'Episode_name', 'avi'],
+                        ['Series Name.S01E02E.03.Episode_name.avi', 'Series Name', undef, 1, 2, 3, undef, undef, 'Episode_name', 'avi'],
+                        ['Series Name S01E02E03/Episode_name.avi', 'Series Name', undef, 1, 2, 3, undef, undef, 'Episode_name', 'avi'],
+                        ['Series Name.Season_01.Episode_02.Episode_name.avi', 'Series Name', undef, 1, 2, undef, undef, undef, 'Episode_name', 'avi'],
+                        ['Series Name.Se01.Ep02.Episode_name.avi', 'Series Name', undef, 1, 2, undef, undef, undef, 'Episode_name', 'avi'],
+                        ['Series Name.Season_01.Episode_02.Episode_name.avi', 'Series Name', undef, 1, 2, undef, undef, undef, 'Episode_name', 'avi'],
+                        ['Series Name.Season_01.Episode_02.Episode_name.avi', 'Series Name', undef, 1, 2, undef, undef, undef, 'Episode_name', 'avi'],
+                        ['Series Name Season_01.02.Episode_name.avi', 'Series Name', undef, 1, 2, undef, undef, undef, 'Episode_name', 'avi'],
+                ],
+        },
+        { # TV Show Support - sxee
+                # Perl > v5.10
+                re => '^(?:(?<name>.*?)[\/\s._-]*)?(?<openb>\[)?(?<season>\d{1,2})[x\/](?<episode>\d{1,2})(?:-(?:\k<season>x)?(?<endep>\d{1,2}))?(?(<openb>)\])(?:[\s._-]*(?<epname>[^\/]+?))?$',
+
+                # Perl < v5.10
+                re_compat => '^(?:(.*?)[\/\s._-]*)?\[?(\d{1,2})[x\/](\d{1,2})(?:-(?:\d{1,2}x)?(\d{1,2}))?\]?(?:[\s._-]*([^\/]+?))?$',
+                keys_compat => [qw(name season episode endep epname)],
+
+                test_funcs => [1, 1], # TV Episode
+                test_keys => [qw(filename name season episode endep epname ext)],
+                test_files => [
+                        ['Series Name.1x02.Episode_name.avi', 'Series Name', 1, 2, undef, 'Episode_name', 'avi'],
+                        ['Series Name 1x02.Episode_name.avi', 'Series Name', 1, 2, undef, 'Episode_name', 'avi'],
+                        ['Series Name.[1x02].Episode_name.avi', 'Series Name', 1, 2, undef, 'Episode_name', 'avi'],
+                        ['Series Name.1x02-03.Episode_name.avi', 'Series Name', 1, 2, 3, 'Episode_name', 'avi'],
+                        ['Series Name.1x02-1x03.Episode_name.avi', 'Series Name', 1, 2, 3, 'Episode_name', 'avi'],
+                ],
+        },
+);
+
+=head1 Methods
+
+=head2 new
+
+Create a Parse object to extract meta information from the file name.
+
+    my $show = File::TVShow::Parse->new('file');
 
 =cut
 
-sub function2 {
+=head3 Data held in the object.
+
+=over 4
+
+=item * show_name:
+Name of the show.
+
+=item * season:
+Show season
+
+=item * episode:
+Show episode
+
+=item * date: (Where eposides are identified by dates)
+Show date e.g 2019.03.03
+
+=item * resolution:
+Show resolution 480p/720p and so on. This will be undefined if not found.
+
+=item * ext:
+File extension
+
+=back
+=cut
+
+sub new {
 }
+
+=head2 show_name
+
+Return the show name found in the file name.
+
+=cut
+
+sub show_name {
+}
+
+=head2 season
+
+Return the season found in the file name. Return undef if no season is found.
+
+=cut
+
+=head2 episode
+
+Return the episode found in the file name. Return undef if no episode found.
+
+=cut
+
+=head2 date
+
+Return the date found in the file name. Return undef if no date found.
+
+=cut
+
+=head2 resolution
+
+Return resolution found in the file name. Return undef if no resolution found.
+
+=cut
+
+=head2 ext
+
+Return file extension.
+
+=cut
+
+=head2 is_tv_show
+
+Return 1 if identified as a TV Show. Default is 0
+
+=cut
+
+=head2 is_by_date
+
+Return 1 if by date. Default is 0
+
+=cut
+
+=head2 is_by_season
+
+Return 1 if by season. Default is 0
+
+=cut
 
 =head1 AUTHOR
 
