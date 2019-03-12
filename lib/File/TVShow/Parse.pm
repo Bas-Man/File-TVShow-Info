@@ -35,10 +35,10 @@ If the file name is parsed and can not be identified as a TV show then L</is_tv_
 @filePatterns = (
         { # TV Show Support -   By Date no Season or Episode
                 # Perl > v5.10
-                re => '(?<name>.*?)[.\s](?<year>\d{4})[.\s](?<month>\d{1,2})[.\s](?<date>\d{1,2})(?:[.\s](?<epname>.*)|)$',
+                re => '(?<name>.*?)[.\s](?<year>\d{4})[.\s](?<month>\d{1,2})[.\s](?<date>\d{1,2})(?:[.\s](?<epname>.*)|)[.](?<ext>[a-z]{3})$',
 
                 # Perl < v5.10
-                re_compat => '(.*?)[.\s](\d{4})[.\s](\d{1,2})[.\s](\d{1,2})(?:[.\s](.*)|)$',
+                re_compat => '(.*?)[.\s](\d{4})[.\s](\d{1,2})[.\s](\d{1,2})(?:[.\s](.*)|)[.](?<ext>[a-z]{3})$',
                 keys_compat => [qw(filename name year month date epname ext)],
 
                 test_funcs => [1, 0], # TV Episode
@@ -135,6 +135,62 @@ File extension
 =cut
 
 sub new {
+    my $class = shift;
+    my $self =  {};
+    bless $self, $class;
+    # Read default values
+    for my $key (qw(file name season episode part options)) {
+        last unless defined $_[0];
+        if (ref $_[0]) {
+                # Use a hashref for values
+                while (my ($key, $value) = each %{$_[0]}) {
+                        $self->{$key} = $value;
+                }
+        } else {
+                $self->{$key} = shift;
+        }
+    }
+
+    print "File: " . $self->{file} . "\n";
+    $self->{filename} = $self->{file};
+    print "Filename: " . $self->{filename} . "\n";
+
+    # Run pre-processed filename through list of patterns
+    for my $pat (@filePatterns) {
+            if ($] >= 5.010000) {
+                    if ($self->{file} =~ /$pat->{re}/i) {
+#                            &warning($pat->{warning}) if defined $pat->{warning};
+#                            &debug(3, "PARSEINFO: $pat->{re}\n");
+                            $self->{regex} = $pat->{re};
+                            while (my ($key, $data) = each %-) {
+                                    $self->{$key} = $data->[0] if defined $data->[0] && !defined $self->{$key};
+                            }
+                            last;
+                    }
+            } else { # No named groups in regexes
+                    my @matches;
+                    if (@matches = ($self->{file} =~ /$pat->{re_compat}/i)) {
+                            #print "MACTHES: ".join(',', @matches)."\n";
+#                            &warning($pat->{warning}) if defined $pat->{warning};
+#                            &debug(3, "PARSEINFO: $pat->{re_compat}\n");
+                            $self->{regex} = $pat->{re_compat};
+                            my $count = 0;
+                            foreach my $key (@{$pat->{keys_compat}}) {
+                                    $self->{$key} = $matches[$count] unless defined $self->{$key};
+                                    $count++;
+                            }
+                            last;
+                    }
+            }
+    }
+
+    if (defined $self->{season}) {
+           $self->{seasonepisode} = sprintf("S%02dE%02d", $self->{season}, $self->{episode});
+    } elsif (defined $self->{dvd}) {
+           $self->{seasonepisode} = sprintf("D%02dE%02.1f", $self->{dvd}, $self->{episode});
+    }
+
+    return $self;
 }
 
 =head2 show_name
@@ -152,6 +208,12 @@ Return the season found in the file name. Return undef if no season is found.
 
 =cut
 
+sub season {
+
+    my $self = shift;
+    return $self->{season} if defined $self->{season};
+    return undef;
+}
 =head2 episode
 
 Return the episode found in the file name. Return undef if no episode found.
@@ -176,11 +238,30 @@ Return file extension.
 
 =cut
 
+sub ext {
+    my $self = shift;
+
+    return $self->{ext} if defined $self->{ext};
+    return undef;
+
+}
 =head2 is_tv_show
 
 Return 1 if identified as a TV Show. Default is 0
 
 =cut
+
+sub is_tv_show {
+    my ($self) = @_;
+
+    if (defined $self->{season} && defined $self->{episode}) {
+        return 1;
+    } elsif (defined $self->{year} && $self->{month} && $self->{date}) {
+        return 1;
+    }
+    # This is not a TVshow
+    return 0;
+}
 
 =head2 is_by_date
 
@@ -188,6 +269,15 @@ Return 1 if by date. Default is 0
 
 =cut
 
+sub is_by_date {
+
+    my $self = shift;
+
+    if (defined $self->{year} && $self->{month} && $self->{date}) {
+        return 1;
+    }
+    return 0;
+}
 =head2 is_by_season
 
 Return 1 if by season. Default is 0
