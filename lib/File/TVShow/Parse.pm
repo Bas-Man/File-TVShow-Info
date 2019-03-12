@@ -4,6 +4,8 @@ use 5.006;
 use strict;
 use warnings;
 
+use vars qw(@filePatterns);
+
 =head1 NAME
 
 File::TVShow::Parse
