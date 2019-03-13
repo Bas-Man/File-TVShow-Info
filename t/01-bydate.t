@@ -23,18 +23,21 @@ subtest "Not a valid TV Show file." => sub {
 subtest "ByDate" => sub {
   my $obj2 = File::TVShow::Parse->new("Series Name.2018.01.03.Episode_name.avi");
   is($obj2->is_tv_show(),1, "This is a TV Show.");
+  can_ok($obj2, "show_name");
+  is($obj2->show_name(), "Series Name", "Show name is Series Name");
   can_ok($obj2, 'is_by_date');
   is($obj2->is_by_date(),1, "This is sorted by date.");
   can_ok($obj2, 'ext');
   is($obj2->ext(),"avi", "extension is avi");
-};
+  can_ok($obj2, 'year');
+  is($obj2->year(), "2018", "year is 2018");
+  can_ok($obj2, 'month');
+  is($obj2->month(), "01", "month is 01");
+  can_ok($obj2, "date");
+  is($obj2->date(), "03", "date is 03");
+  can_ok($obj2, "ymd");
+  is($obj2->ymd(), "2018.01.03", "ymd is 2018.01.03");
 
-subtest "This file is not sorted by date. Sorted by SXXEXX" => sub {
-  my $obj3 = File::TVShow::Parse->new("test.S01E01.avi");
-  is($obj3->is_by_date(), 0, "This is not sorted by date");
-  is($obj3->is_tv_show(), 1, "This is a TV show.");
-  can_ok($obj3, 'season');
-  is($obj3->season(),'01', "Season: 01");
 };
 
 done_testing();

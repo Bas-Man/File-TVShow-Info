@@ -35,14 +35,14 @@ If the file name is parsed and can not be identified as a TV show then L</is_tv_
 @filePatterns = (
         { # TV Show Support -   By Date no Season or Episode
                 # Perl > v5.10
-                re => '(?<name>.*?)[.\s](?<year>\d{4})[.\s](?<month>\d{1,2})[.\s](?<date>\d{1,2})(?:[.\s](?<epname>.*)|)[.](?<ext>[a-z]{3})$',
+                re => '(?<show_name>.*?)[.\s_-](?<year>\d{4})[.\s_-](?<month>\d{1,2})[.\s_-](?<date>\d{1,2})(?:[.\s_-](?<epname>.*)|)[.](?<ext>[a-z]{3})$',
 
                 # Perl < v5.10
-                re_compat => '(.*?)[.\s](\d{4})[.\s](\d{1,2})[.\s](\d{1,2})(?:[.\s](.*)|)[.](?<ext>[a-z]{3})$',
-                keys_compat => [qw(filename name year month date epname ext)],
+                re_compat => '(.*?)[.\s_-](\d{4})[.\s_-](\d{1,2})[.\s_-](\d{1,2})(?:[.\s_-](.*)|)[.](?<ext>[a-z]{3})$',
+                keys_compat => [qw(filename show_name year month date epname ext)],
 
                 test_funcs => [1, 0], # TV Episode
-                test_keys => [qw(filename name year month date epname ext)],
+                test_keys => [qw(filename show_name year month date epname ext)],
                 test_files => [
                         ['Series Name.2018.01.03.Episode_name.avi', 'Series Name', '2018', '01', '03', 'Episode_name', 'avi'],
                         ['Series Name 2018 02 03 Episode_name.avi', 'Series Name', '2018', '02', '03', 'Episode_name', 'avi'],
@@ -57,10 +57,10 @@ If the file name is parsed and can not be identified as a TV show then L</is_tv_
 
                 # Perl < v5.10
                 re_compat => '^(?:(.*?)[\/\s._-]+)?(?:s|se|season|series)[\s._-]?(\d{1,2})[x\/\s._-]*(?:e|ep|episode|[\/\s._-]+)[\s._-]?(\d{1,2})(?:-?(?:(?:e|ep)[\s._]*)?(\d{1,2}))?(?:[\s._]?(?:p|part)[\s._]?(\d+))?([a-z])?(?:[\/\s._-]*([^\/]+?))?$',
-                keys_compat => [qw(name season episode endep part subep epname)],
+                keys_compat => [qw(show_name season episode endep part subep epname)],
 
                 test_funcs => [1, 1], # TV Episode
-                test_keys => [qw(filename name guess-name season episode endep part subep epname ext)],
+                test_keys => [qw(filename show_name guess-name season episode endep part subep epname ext)],
                 test_files => [
                         ['Series Name.S01E02.Episode_name.avi', 'Series Name', undef, 1, 2, undef, undef, undef, 'Episode_name', 'avi'],
                         ['Series Name S01E02.Episode_name.avi', 'Series Name', undef, 1, 2, undef, undef, undef, 'Episode_name', 'avi'],
@@ -151,22 +151,22 @@ sub new {
         }
     }
 
-    print "File: " . $self->{file} . "\n";
     $self->{filename} = $self->{file};
-    print "Filename: " . $self->{filename} . "\n";
 
-    # Run pre-processed filename through list of patterns
+    # Run filename through list of patterns
     for my $pat (@filePatterns) {
             if ($] >= 5.010000) {
-                    if ($self->{file} =~ /$pat->{re}/i) {
+                  if ($self->{file} =~ /$pat->{re}/i) {
+                  # We have a match we will exit after this loop
 #                            &warning($pat->{warning}) if defined $pat->{warning};
 #                            &debug(3, "PARSEINFO: $pat->{re}\n");
-                            $self->{regex} = $pat->{re};
-                            while (my ($key, $data) = each %-) {
-                                    $self->{$key} = $data->[0] if defined $data->[0] && !defined $self->{$key};
-                            }
-                            last;
-                    }
+                    $self->{regex} = $pat->{re};
+                        while (my ($key, $data) = each %-) {
+                            $self->{$key} = $data->[0] if defined $data->[0] && !defined $self->{$key};
+                          }
+                          # We have a match so we are skipping all other @filePatterns
+                          last;
+                  }
             } else { # No named groups in regexes
                     my @matches;
                     if (@matches = ($self->{file} =~ /$pat->{re_compat}/i)) {
@@ -200,11 +200,17 @@ Return the show name found in the file name.
 =cut
 
 sub show_name {
+
+    my $self = shift;
+
+    return $self->{show_name} if defined $self->{show_name};
+    return '';
+
 }
 
 =head2 season
 
-Return the season found in the file name. Return undef if no season is found.
+Return the season found in the file name. Return '' if no season is found.
 
 =cut
 
@@ -212,19 +218,73 @@ sub season {
 
     my $self = shift;
     return $self->{season} if defined $self->{season};
-    return undef;
+    return '';
 }
 =head2 episode
 
-Return the episode found in the file name. Return undef if no episode found.
+Return the episode found in the file name. Return '' if no episode found.
 
 =cut
+
+=head2 year
+
+Return the year found in the file name. Return '' is no year found.
+
+=cut
+
+sub year {
+
+    my $self = shift;
+
+    return $self->{year} if defined $self->{year};
+    return '';
+
+}
+
+=head2 month
+
+Return the month found in the file name. Return '' if no month found.
+
+=cut
+
+sub month {
+
+    my $self = shift;
+
+    return $self->{month} if defined $self->{month};
+    return '';
+
+}
 
 =head2 date
 
-Return the date found in the file name. Return undef if no date found.
+Return the date found in the file name. Return '' if no date found.
 
 =cut
+
+sub date {
+
+    my $self = shift;
+
+    return $self->{date} if defined $self->{date};
+    return '';
+
+}
+
+=head2 ymd
+
+Return the complete date string as 'YYYY.MM.DD' Rutun '' if no ymd
+
+=cut
+
+sub ymd {
+
+    my $self = shift;
+
+    return $self->{year} . "." . $self->{month} . "." . $self->{date}
+      if defined $self->{year} && defined $self->{month};
+    return '';
+}
 
 =head2 resolution
 
