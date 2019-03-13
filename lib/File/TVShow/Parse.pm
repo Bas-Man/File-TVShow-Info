@@ -222,6 +222,31 @@ Return the episode found in the file name. Return '' if no episode found.
 
 =cut
 
+sub episode {
+
+    my $self = shift;
+
+    return $self->{episode} if defined $self->{episode};
+    return '';
+
+}
+
+=head2 season_episode
+
+Return SXXEXX or SXXEXXEXX for single or multi episode files. Return '' if not created
+
+=cut
+
+sub season_episode {
+
+    my $self = shift;
+
+    return "S" . $self->{season} . "E" .
+      $self->{episode} if defined $self->{season};
+    return '';
+
+}
+
 =head2 year
 
 Return the year found in the file name. Return '' is no year found.
