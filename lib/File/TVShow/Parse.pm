@@ -158,9 +158,7 @@ sub new {
             if ($] >= 5.010000) {
                   if ($self->{file} =~ /$pat->{re}/i) {
                   # We have a match we will exit after this loop
-#                            &warning($pat->{warning}) if defined $pat->{warning};
-#                            &debug(3, "PARSEINFO: $pat->{re}\n");
-                    $self->{regex} = $pat->{re};
+                      $self->{regex} = $pat->{re};
                         while (my ($key, $data) = each %-) {
                             $self->{$key} = $data->[0] if defined $data->[0] && !defined $self->{$key};
                           }
@@ -171,8 +169,6 @@ sub new {
                     my @matches;
                     if (@matches = ($self->{file} =~ /$pat->{re_compat}/i)) {
                             #print "MACTHES: ".join(',', @matches)."\n";
-#                            &warning($pat->{warning}) if defined $pat->{warning};
-#                            &debug(3, "PARSEINFO: $pat->{re_compat}\n");
                             $self->{regex} = $pat->{re_compat};
                             my $count = 0;
                             foreach my $key (@{$pat->{keys_compat}}) {
@@ -299,12 +295,14 @@ Return file extension.
 =cut
 
 sub ext {
+
     my $self = shift;
 
     return $self->{ext} if defined $self->{ext};
     return undef;
 
 }
+
 =head2 is_tv_show
 
 Return 1 if identified as a TV Show. Default is 0
@@ -312,6 +310,7 @@ Return 1 if identified as a TV Show. Default is 0
 =cut
 
 sub is_tv_show {
+
     my ($self) = @_;
 
     if (defined $self->{season} && defined $self->{episode}) {
