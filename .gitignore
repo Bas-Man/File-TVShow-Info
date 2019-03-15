@@ -12,7 +12,6 @@ cover_db/
 blib/
 inc/
 /t/pod.t
-/t/pod-coverage.t
 .lwpcookies
 .last_cover_stats
 nytprof.out
