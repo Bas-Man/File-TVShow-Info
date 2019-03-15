@@ -24,7 +24,7 @@ our $VERSION = '0.01';
 This module is intended to parse and identify information in the file name of a TV show. These details can then be accessed
 by calling the relevant methods. It does B<NOT> attempt to read the contents of the file.
 
-Note: This module will modelled off Video::Filename created by Behan Webster, but will focus on TV Shows only and with additional features.
+Note: This module will modelled off L<https://metacpan.org/pod/Video::Filename> created by Behan Webster, but will focus on TV Shows only and with additional features.
 
 If the file name is parsed and can not be identified as a TV show then L</is_tv_show> will return 0.
 
@@ -194,6 +194,7 @@ sub new {
             }
     }
     $self->_isolate_name_year();
+    $self->_get_ripper();
     return $self;
 }
 
@@ -376,6 +377,18 @@ Return resolution found in the file name. Return '' if no resolution found.
 
 =cut
 
+=head2 ripper
+
+=cut
+
+sub ripper {
+
+    my $self = shift;
+
+    return $self->{ripper} if defined $self->{ripper};
+    return '';
+}
+
 =head2 episode_name (Under consideration, difficult to isolate and often ommited)
 
 =cut
@@ -473,7 +486,7 @@ sub _isolate_name_year {
       $regex = '(?<show_name>.*[^\s(_.])[\s(_.]+(?<year>\d{4})';
     } else { # Perl versions below 5.10 do not have group support
       $regex = '(.*[^\s(_.])[\s(_.]+(\d{4})';
-  }
+    }
     # Skip isolation if show_name is in the array @exceptions
     # We do not want to modify the file name.
     foreach (@exceptions) {
@@ -487,6 +500,30 @@ sub _isolate_name_year {
       $self->{year} = $+{year} || $2; #$2 equals group year
       $self->{show_name} = $+{show_name} || $1; # $1 equals group show_name
     }
+}
+
+=head2 _get_ripper
+
+=cut
+
+sub _get_ripper {
+
+    my $self = shift;
+
+    # This is not a tv show file. Exit method now.
+    return if !$self->is_tv_show() || !defined $self->{epname};
+
+    my $regex;
+    if ($] >= 5.010000) { # Perl 5.10 > has regex group support
+      $regex = '[\[]?(?P<ripper>fov|vtv|ettv|rmteam|eztv)[]]?';
+    } else { # Perl versions below 5.10 do not have group support
+      $regex = '[\[]?(fov|vtv|ettv|rmteam|eztv)[]]?';
+    }
+    if ($self->{epname} =~ /$regex/gi) {
+      $self->{ripper} = $+{ripper} || $1; # $1 equals group show_name
+    }
+
+
 }
 
 =head1 AUTHOR
