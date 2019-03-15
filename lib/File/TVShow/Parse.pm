@@ -119,9 +119,9 @@ Create a Parse object to extract meta information from the file name.
 Name of the show.
 
 =item * original_show_name:
-This will contain the show name found in the file name without any modifications
+This will contain the show name found in the file name without any modifications.
 This will only be defined if _isolate_name_year has found a year string
-within the file name such test.2019, test.(2019), test 2018, test (2018)
+within the file name such as name.2019, name.(2019), name 2018, name (2018)
 
 =item * season:
 Show season
@@ -136,7 +136,7 @@ last Episode number found when file name contains SXXEXXEXX
 Show date e.g 2019.03.03
 This can be accessed using the method L</ymd>
 Note: year will be defined in two cases.
-  One: show name contains year
+  One: show name contains year.
   Two: File name contains YYYY.MM.DD that are identified by date.
 
 =item * resolution:
@@ -388,6 +388,8 @@ sub resolution {
 
 =head2 ripper
 
+Return ripper found in the file name. Return '' if no ripper found.
+
 =cut
 
 sub ripper {
@@ -399,6 +401,8 @@ sub ripper {
 }
 
 =head2 episode_name (Under consideration, difficult to isolate and often ommited)
+
+This needs to be documented.
 
 =cut
 
@@ -445,6 +449,11 @@ sub is_tv_show {
     return 0;
 }
 
+=head2 is_tv_subtitle
+
+=cut
+
+
 =head2 is_by_date
 
 Return 1 if by date. Default is 0
@@ -478,6 +487,8 @@ sub is_by_season {
 }
 
 =head2 _isolate_name_year
+
+This is an internal method called by new(). Your should B<NOT> call this yourself.
 
 =cut
 
@@ -513,6 +524,8 @@ sub _isolate_name_year {
 
 =head2 _get_ripper
 
+This is an internal method called by new(). You should B<NOT> call if yourself.
+
 =cut
 
 sub _get_ripper {
@@ -534,6 +547,8 @@ sub _get_ripper {
 }
 
 =head2 _get_resolution
+
+This is an internal method called by new(). You should B<NOT> call if yourself.
 
 =cut
 
