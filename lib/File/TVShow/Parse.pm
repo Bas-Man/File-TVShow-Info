@@ -21,15 +21,14 @@ our $VERSION = '0.01';
 
 =head1 SYNOPSIS
 
-This module is intended to parse and identify information in the file name of a TV show. These details can then be accessed
+This module is intended to identify and extract nformation in the file name of a TV show. These details can then be accessed
 by calling the relevant methods. It does B<NOT> attempt to read the contents of the file.
 
-Note: This module will modelled off L<https://metacpan.org/pod/Video::Filename> created by Behan Webster, but will focus on TV Shows only and with additional features.
+Note: This module will be modelled off L<https://metacpan.org/pod/Video::Filename> created by Behan Webster, but will focus on TV Shows only and with additional features.
 
 If the file name is parsed and can not be identified as a TV show then L</is_tv_show> will return 0.
 
     use File::TVShow::Parse;
-
     my $show = File::TVShow::Parse->new('file');
 
 =cut
@@ -111,7 +110,10 @@ Create a Parse object to extract meta information from the file name.
 
 =cut
 
-=head3 Data held in the object.
+=head3 Object attributes.
+
+Attributes may be accessed through $show->{attribute_name} however methods
+do exist for all required operations.
 
 =over 4
 
@@ -136,11 +138,18 @@ last Episode number found when file name contains SXXEXXEXX
 Show date e.g 2019.03.03
 This can be accessed using the method L</ymd>
 Note: year will be defined in two cases.
-  One: show name contains year.
-  Two: File name contains YYYY.MM.DD that are identified by date.
+  One: show name contains year. show_name.yyyy or
+  Two: File name contains YYYY.MM.DD that are identified by date. These are mutually
+  exclusive and no conflict is expected.
 
 =item * resolution:
 Show resolution 480p/720p and so on. This will be '' if not found.
+
+=item * ripper
+
+=item * is_subtitle
+
+=item * subtitle_lang
 
 =item * ext:
 File extension
@@ -219,8 +228,10 @@ sub show_name {
 =head2 original_show_name
 
 Return the original show name.
-This method will return the orginal show name if defined original_show_name
-will be defined if show name contained a year string (YYYY) or YYYY
+
+This method will return the orginal show name if original_show_name is defined.
+This will be defined if show_name contains a year string (YYYY) or YYYY
+
 If not defined it will return {show_name}
 
 =cut
@@ -235,7 +246,7 @@ sub original_show_name {
 
 =head2 season
 
-Return the season found in the file name. Return '' if no season is found.
+Return the season found in the file name. Return '' if {season} is not defined.
 
 =cut
 
@@ -247,7 +258,7 @@ sub season {
 }
 =head2 episode
 
-Return the episode found in the file name. Return '' if no episode found.
+Return the episode found in the file name. Return '' if {episode} is not defined.
 
 =cut
 
@@ -264,6 +275,8 @@ sub episode {
 
 Return 1 if this is a multi-episode file SXXEXXEXX. Return 0 if false
 
+This is true if {endep} is defined.
+
 =cut
 
 sub is_multi_episode {
@@ -277,30 +290,34 @@ sub is_multi_episode {
 
 =head2 season_episode
 
-Return SXXEXX or SXXEXXEXX for single or multi episode files. Return '' if not created
+Return SXXEXX or SXXEXXEXX for single or multi episode files. Return '' if not
+created
+
+This would only return an empty string if the show_name is not formated as
+show_name.SXX.*
 
 =cut
 
 sub season_episode {
 
     my $self = shift;
-    my $se = '';
+    my $s_e = '';
 
     #  endep indicates that this is is_multi_episode file. SXXEXXEXX
     if ((defined $self->{episode}) && (!defined $self->{endep})) {
-      $se = sprintf("S%02dE%02d", $self->{season}, $self->{episode});
+      $s_e = sprintf("S%02dE%02d", $self->{season}, $self->{episode});
     } elsif ((defined $self->{episode}) && (defined $self->{endep})) {
     #  This is a multi-Episde
-      $se = sprintf("S%02dE%02dE%02d", $self->{season}, $self->{episode},
+      $s_e = sprintf("S%02dE%02dE%02d", $self->{season}, $self->{episode},
         $self->{endep});
     };
-    return $se;
+    return $s_e;
 
 }
 
 =head2 has_year
 
-Returns 1 if $self->{year} is defined else return 0
+Returns 1 if year is defined else return 0
 
 =cut
 
@@ -315,7 +332,7 @@ sub has_year {
 
 =head2 year
 
-Return the year found in the file name. Return '' is no year found.
+Return the year found in the file name. Return '' if {year} is not defined.
 
 =cut
 
@@ -330,7 +347,7 @@ sub year {
 
 =head2 month
 
-Return the month found in the file name. Return '' if no month found.
+Return the month found in the file name. Return '' if {month} is not defined.
 
 =cut
 
@@ -345,7 +362,7 @@ sub month {
 
 =head2 date
 
-Return the date found in the file name. Return '' if no date found.
+Return the date found in the file name. Return '' if {date} is not defined.
 
 =cut
 
@@ -360,8 +377,8 @@ sub date {
 
 =head2 ymd
 
-Return the complete date string as 'YYYY.MM.DD' Ruturn '' if no attributes
-year, month, or date.
+Return the complete date string as 'YYYY.MM.DD' Ruturn '' if attributes
+{year}, {month}, and {date} are not defined.
 
 =cut
 
@@ -376,7 +393,7 @@ sub ymd {
 
 =head2 resolution
 
-Return resolution found in the file name. Return '' if no resolution found.
+Return resolution found in the file name. Return '' if {resolution} is not defined.
 
 =cut
 
@@ -390,7 +407,7 @@ sub resolution {
 
 =head2 ripper
 
-Return ripper found in the file name. Return '' if no ripper found.
+Return ripper found in the file name. Return '' if {ripper} is not defined.
 
 =cut
 
@@ -404,7 +421,7 @@ sub ripper {
 
 =head2 episode_name (Under consideration, difficult to isolate and often ommited)
 
-This needs to be documented.
+Return episode_name. Return '' if {epname} is not defined.
 
 =cut
 
@@ -419,7 +436,7 @@ sub episode_name {
 
 =head2 ext
 
-Return file extension.
+Return file extension. {ext}
 
 =cut
 
@@ -453,7 +470,9 @@ sub is_tv_show {
 
 =head2 is_tv_subtitle
 
-Returns 1 if the file is a subtitle file, 0 if not
+Returns 1 if the file is a subtitle file, 0 if {is_subtitle} is not defined.
+
+The file must also return true for is_tv_show() or the result is 0
 
 =cut
 
@@ -467,7 +486,9 @@ sub is_tv_subtitle {
 
 =head2 has_subtitle_lang
 
-Return 1 if subtitle language was found, 0 if subtitle file but not language found.
+Return 1 if subtitle language was found, Return 0 if {subtitle_lang} is not defined.
+
+Must also return 1 for is_tv_subtitle()
 
 =cut
 
@@ -481,7 +502,7 @@ sub has_subtitle_lang {
 
 =head2 subtitle_lang
 
-Returns the language of the subtitle file: eng or en or '' if not found.
+Returns the language of the subtitle file: eng or en. Return '' if {subtitle_lang} is not defined.
 
 =cut
 
@@ -497,6 +518,8 @@ sub subtitle_lang {
 =head2 is_by_date
 
 Return 1 if by date. Default is 0
+
+This will be true where year, month and date are all defined. show_name.yyyy.mm.dd.ext
 
 =cut
 
@@ -514,6 +537,8 @@ sub is_by_date {
 =head2 is_by_season
 
 Return 1 if by season. Default is 0
+
+Requires {season} and {episode} to be defined.
 
 =cut
 
@@ -616,7 +641,8 @@ sub _get_resolution {
 =head2 _is_tv_subtitle
 
 This is an internal method called by new(). You should B<NOT> call it yourself
-This will determine if the file is a subtitle and set the internal flag
+
+This will determine if the file is a subtitle and define {is_subtitle}
 
 =cut
 
@@ -637,7 +663,9 @@ sub _is_tv_subtitle {
 =head2 _get_subtitle_lang
 
 This is an internal method called by new(). You should B<NOT> call it yourself.
-This will get the subtitles language from the file name if present.
+
+This will get the subtitles language from the file name if present. {subtitle_lang}.
+Requires that {is_subtitle} is defined.
 
 =cut
 
