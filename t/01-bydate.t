@@ -37,6 +37,8 @@ subtest "ByDate" => sub {
   is($obj2->date(), "03", "date is 03");
   can_ok($obj2, "ymd");
   is($obj2->ymd(), "2018.01.03", "ymd is 2018.01.03");
+  can_ok($obj2, 'is_by_season');
+  is($obj2->is_by_season(), 0, "This is not be season");
 
 };
 
