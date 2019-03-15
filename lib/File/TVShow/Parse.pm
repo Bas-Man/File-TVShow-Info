@@ -194,6 +194,7 @@ sub new {
             }
     }
     $self->_isolate_name_year();
+    $self->_get_resolution();
     $self->_get_ripper();
     return $self;
 }
@@ -377,6 +378,14 @@ Return resolution found in the file name. Return '' if no resolution found.
 
 =cut
 
+sub resolution {
+
+    my $self = shift;
+
+    return $self->{resolution} if defined $self->{resolution};
+    return '';
+}
+
 =head2 ripper
 
 =cut
@@ -520,11 +529,33 @@ sub _get_ripper {
       $regex = '[\[]?(fov|vtv|ettv|rmteam|eztv)[]]?';
     }
     if ($self->{epname} =~ /$regex/gi) {
-      $self->{ripper} = $+{ripper} || $1; # $1 equals group show_name
+      $self->{ripper} = $+{ripper} || $1; # $1 equals group ripper
+    }
+}
+
+=head2 _get_resolution
+
+=cut
+
+sub _get_resolution {
+
+    my $self = shift;
+
+    # This is not a tv show file. Exit method now.
+    return if !$self->is_tv_show() || !defined $self->{epname};
+
+    my $regex;
+    if ($] >= 5.010000) { # Perl 5.10 > has regex group support
+      $regex = '(?P<resolution>[0-9]{3,4}[p|i])';
+    } else { # Perl versions below 5.10 do not have group support
+      $regex = '([0-9]{3,4}[p|i])';
+    }
+    if ($self->{epname} =~ /$regex/gi) {
+      $self->{resolution} = $+{resolution} || $1; # $1 equals group resolution
     }
 
-
 }
+
 
 =head1 AUTHOR
 
