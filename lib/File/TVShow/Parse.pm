@@ -196,6 +196,8 @@ sub new {
     $self->_isolate_name_year();
     $self->_get_resolution();
     $self->_get_ripper();
+    $self->_is_tv_subtitle();
+    $self->_get_subtitle_lang();
     return $self;
 }
 
@@ -451,8 +453,46 @@ sub is_tv_show {
 
 =head2 is_tv_subtitle
 
+Returns 1 if the file is a subtitle file, 0 if not
+
 =cut
 
+sub is_tv_subtitle {
+
+    my $self = shift;
+
+    return 1 if (($self->is_tv_show()) && (defined $self->{is_subtitle}));
+    return 0;
+}
+
+=head2 has_subtitle_lang
+
+Return 1 if subtitle language was found, 0 if subtitle file but not language found.
+
+=cut
+
+sub has_subtitle_lang {
+
+    my $self = shift;
+
+    return 1 if (($self->is_tv_subtitle()) && (defined $self->{subtitle_lang}));
+    return 0;
+}
+
+=head2 subtitle_lang
+
+Returns the language of the subtitle file: eng or en or '' if not found.
+
+=cut
+
+sub subtitle_lang {
+
+    my $self = shift;
+
+    return $self->{subtitle_lang} if defined $self->{subtitle_lang};
+    return '';
+
+}
 
 =head2 is_by_date
 
@@ -485,6 +525,8 @@ sub is_by_season {
     }
     return 0;
 }
+
+=head1 Internal Methods
 
 =head2 _isolate_name_year
 
@@ -548,7 +590,7 @@ sub _get_ripper {
 
 =head2 _get_resolution
 
-This is an internal method called by new(). You should B<NOT> call if yourself.
+This is an internal method called by new(). You should B<NOT> call it yourself.
 
 =cut
 
@@ -571,6 +613,51 @@ sub _get_resolution {
 
 }
 
+=head2 _is_tv_subtitle
+
+This is an internal method called by new(). You should B<NOT> call it yourself
+This will determine if the file is a subtitle and set the internal flag
+
+=cut
+
+sub _is_tv_subtitle {
+
+    my $self = shift;
+
+    # This is not a tv show file. Exit method now.
+    return if !$self->is_tv_show();
+
+    my @list_of_subtitle_ext = qw(srt smi ssa ass vtt);
+
+    if (grep { $_ eq $self->{ext}} @list_of_subtitle_ext) {
+      $self->{is_subtitle} = 1;
+    }
+}
+
+=head2 _get_subtitle_lang
+
+This is an internal method called by new(). You should B<NOT> call it yourself.
+This will get the subtitles language from the file name if present.
+
+=cut
+
+sub _get_subtitle_lang {
+
+    my $self = shift;
+
+    # This is not a subtitle file. Exit method now.
+    return if !defined $self->{is_subtitle};
+
+    my $regex;
+    if ($] >= 5.010000) { # Perl 5.10 > has regex group support
+      $regex = '(?P<lang>[a-z]{2,})$';
+    } else { # Perl versions below 5.10 do not have group support
+      $regex = '([a-z]{2,})$';
+    }
+    if ($self->{epname} =~ /$regex/gi) {
+      $self->{subtitle_lang} = $+{lang} || $1; # $1 equals group lang
+    }
+}
 
 =head1 AUTHOR
 
