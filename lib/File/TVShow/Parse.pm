@@ -24,7 +24,7 @@ our $VERSION = '0.01';
 This module is intended to parse and identify information in the file name of a TV show. These details can then be accessed
 by calling the relevant methods. It does B<NOT> attempt to read the contents of the file.
 
-Note: This module will modelled off Video::Filename created by Behan Webster, but will focus on TV Shows only and with additional features.
+Note: This module will modelled off L<https://metacpan.org/pod/Video::Filename> created by Behan Webster, but will focus on TV Shows only and with additional features.
 
 If the file name is parsed and can not be identified as a TV show then L</is_tv_show> will return 0.
 
@@ -119,9 +119,9 @@ Create a Parse object to extract meta information from the file name.
 Name of the show.
 
 =item * original_show_name:
-This will contain the show name found in the file name without any modifications
+This will contain the show name found in the file name without any modifications.
 This will only be defined if _isolate_name_year has found a year string
-within the file name such test.2019, test.(2019), test 2018, test (2018)
+within the file name such as name.2019, name.(2019), name 2018, name (2018)
 
 =item * season:
 Show season
@@ -136,7 +136,7 @@ last Episode number found when file name contains SXXEXXEXX
 Show date e.g 2019.03.03
 This can be accessed using the method L</ymd>
 Note: year will be defined in two cases.
-  One: show name contains year
+  One: show name contains year.
   Two: File name contains YYYY.MM.DD that are identified by date.
 
 =item * resolution:
@@ -194,6 +194,8 @@ sub new {
             }
     }
     $self->_isolate_name_year();
+    $self->_get_resolution();
+    $self->_get_ripper();
     return $self;
 }
 
@@ -376,7 +378,31 @@ Return resolution found in the file name. Return '' if no resolution found.
 
 =cut
 
+sub resolution {
+
+    my $self = shift;
+
+    return $self->{resolution} if defined $self->{resolution};
+    return '';
+}
+
+=head2 ripper
+
+Return ripper found in the file name. Return '' if no ripper found.
+
+=cut
+
+sub ripper {
+
+    my $self = shift;
+
+    return $self->{ripper} if defined $self->{ripper};
+    return '';
+}
+
 =head2 episode_name (Under consideration, difficult to isolate and often ommited)
+
+This needs to be documented.
 
 =cut
 
@@ -423,6 +449,11 @@ sub is_tv_show {
     return 0;
 }
 
+=head2 is_tv_subtitle
+
+=cut
+
+
 =head2 is_by_date
 
 Return 1 if by date. Default is 0
@@ -457,6 +488,8 @@ sub is_by_season {
 
 =head2 _isolate_name_year
 
+This is an internal method called by new(). Your should B<NOT> call this yourself.
+
 =cut
 
 sub _isolate_name_year {
@@ -473,7 +506,7 @@ sub _isolate_name_year {
       $regex = '(?<show_name>.*[^\s(_.])[\s(_.]+(?<year>\d{4})';
     } else { # Perl versions below 5.10 do not have group support
       $regex = '(.*[^\s(_.])[\s(_.]+(\d{4})';
-  }
+    }
     # Skip isolation if show_name is in the array @exceptions
     # We do not want to modify the file name.
     foreach (@exceptions) {
@@ -488,6 +521,56 @@ sub _isolate_name_year {
       $self->{show_name} = $+{show_name} || $1; # $1 equals group show_name
     }
 }
+
+=head2 _get_ripper
+
+This is an internal method called by new(). You should B<NOT> call if yourself.
+
+=cut
+
+sub _get_ripper {
+
+    my $self = shift;
+
+    # This is not a tv show file. Exit method now.
+    return if !$self->is_tv_show() || !defined $self->{epname};
+
+    my $regex;
+    if ($] >= 5.010000) { # Perl 5.10 > has regex group support
+      $regex = '[\[]?(?P<ripper>fov|vtv|ettv|rmteam|eztv)[]]?';
+    } else { # Perl versions below 5.10 do not have group support
+      $regex = '[\[]?(fov|vtv|ettv|rmteam|eztv)[]]?';
+    }
+    if ($self->{epname} =~ /$regex/gi) {
+      $self->{ripper} = $+{ripper} || $1; # $1 equals group ripper
+    }
+}
+
+=head2 _get_resolution
+
+This is an internal method called by new(). You should B<NOT> call if yourself.
+
+=cut
+
+sub _get_resolution {
+
+    my $self = shift;
+
+    # This is not a tv show file. Exit method now.
+    return if !$self->is_tv_show() || !defined $self->{epname};
+
+    my $regex;
+    if ($] >= 5.010000) { # Perl 5.10 > has regex group support
+      $regex = '(?P<resolution>[0-9]{3,4}[p|i])';
+    } else { # Perl versions below 5.10 do not have group support
+      $regex = '([0-9]{3,4}[p|i])';
+    }
+    if ($self->{epname} =~ /$regex/gi) {
+      $self->{resolution} = $+{resolution} || $1; # $1 equals group resolution
+    }
+
+}
+
 
 =head1 AUTHOR
 
