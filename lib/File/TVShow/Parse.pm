@@ -8,7 +8,7 @@ use vars qw(@filePatterns);
 
 =head1 NAME
 
-File::TVShow::Parse
+File::TVShow::Parse - Perl meta data extractor from file name for TV Show file.
 
 =head1 VERSION
 
