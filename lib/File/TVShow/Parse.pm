@@ -219,9 +219,11 @@ Return the show name found in the file name.
 sub show_name {
 
     my $self = shift;
+    my $attr = 'show_name';
+    $self->__get_obj_attr($attr);
 
-    return $self->{show_name} if defined $self->{show_name};
-    return '';
+    #return $self->{show_name} if defined $self->{show_name};
+    #return '';
 
 }
 
@@ -253,9 +255,12 @@ Return the season found in the file name. Return '' if {season} is not defined.
 sub season {
 
     my $self = shift;
-    return $self->{season} if defined $self->{season};
-    return '';
+    my $attr = 'season';
+    $self->__get_obj_attr($attr);
+    #return $self->{season} if defined $self->{season};
+    #return '';
 }
+
 =head2 episode
 
 Return the episode found in the file name. Return '' if {episode} is not defined.
@@ -265,9 +270,11 @@ Return the episode found in the file name. Return '' if {episode} is not defined
 sub episode {
 
     my $self = shift;
+    my $attr = 'episode';
+    $self->__get_obj_attr($attr);
 
-    return $self->{episode} if defined $self->{episode};
-    return '';
+    #return $self->{episode} if defined $self->{episode};
+    #return '';
 
 }
 
@@ -339,9 +346,11 @@ Return the year found in the file name. Return '' if {year} is not defined.
 sub year {
 
     my $self = shift;
+    my $attr = 'year';
+    $self->__get_obj_attr($attr);
 
-    return $self->{year} if defined $self->{year};
-    return '';
+    #return $self->{year} if defined $self->{year};
+    #return '';
 
 }
 
@@ -354,9 +363,11 @@ Return the month found in the file name. Return '' if {month} is not defined.
 sub month {
 
     my $self = shift;
+    my $attr = 'month';
+    $self->__get_obj_attr($attr);
 
-    return $self->{month} if defined $self->{month};
-    return '';
+    #return $self->{month} if defined $self->{month};
+    #return '';
 
 }
 
@@ -369,9 +380,11 @@ Return the date found in the file name. Return '' if {date} is not defined.
 sub date {
 
     my $self = shift;
+    my $attr = 'date';
+    $self->__get_obj_attr($attr);
 
-    return $self->{date} if defined $self->{date};
-    return '';
+    #return $self->{date} if defined $self->{date};
+    #return '';
 
 }
 
@@ -400,9 +413,11 @@ Return resolution found in the file name. Return '' if {resolution} is not defin
 sub resolution {
 
     my $self = shift;
+    my $attr = 'resolution';
+    $self->__get_obj_attr($attr);
 
-    return $self->{resolution} if defined $self->{resolution};
-    return '';
+    #return $self->{resolution} if defined $self->{resolution};
+    #return '';
 }
 
 =head2 ripper
@@ -414,9 +429,11 @@ Return ripper found in the file name. Return '' if {ripper} is not defined.
 sub ripper {
 
     my $self = shift;
+    my $attr = 'ripper';
+    $self->__get_obj_attr($attr);
 
-    return $self->{ripper} if defined $self->{ripper};
-    return '';
+    #return $self->{ripper} if defined $self->{ripper};
+    #return '';
 }
 
 =head2 episode_name (Under consideration, difficult to isolate and often ommited)
@@ -445,6 +462,7 @@ sub ext {
     my $self = shift;
 
     return $self->{ext} if defined $self->{ext};
+    # Return '' or undef? this sould never even happen.
     return undef;
 
 }
@@ -509,9 +527,11 @@ Returns the language of the subtitle file: eng or en. Return '' if {subtitle_lan
 sub subtitle_lang {
 
     my $self = shift;
+    my $attr = 'subtitle_lang';
+    $self->__get_obj_attr($attr);
 
-    return $self->{subtitle_lang} if defined $self->{subtitle_lang};
-    return '';
+    #return $self->{subtitle_lang} if defined $self->{subtitle_lang};
+    #return '';
 
 }
 
@@ -574,14 +594,15 @@ sub _isolate_name_year {
     } else { # Perl versions below 5.10 do not have group support
       $regex = '(.*[^\s(_.])[\s(_.]+(\d{4})';
     }
-    # Skip isolation if show_name is in the array @exceptions
+    # Skip isolation if {show_name} is in the array @exceptions
     # We do not want to modify the file name.
     foreach (@exceptions) {
       return if $self->{show_name} =~ m/$_/;
     }
 
-    # break show_name from year
+    # break {show_name} from year
     if ($self->{show_name} =~ /$regex/gi) {
+      # First copy {show_name} to new attr
       $self->{original_show_name} = $self->{show_name};
       # Support to handle either case of group or no groups in regex
       $self->{year} = $+{year} || $2; #$2 equals group year
@@ -685,6 +706,15 @@ sub _get_subtitle_lang {
     if ($self->{epname} =~ /$regex/gi) {
       $self->{subtitle_lang} = $+{lang} || $1; # $1 equals group lang
     }
+}
+
+sub __get_obj_attr {
+
+    my ($self, $attr) = @_;
+
+    return $self->{$attr} if defined $self->{$attr};
+    return '';
+
 }
 
 =head1 AUTHOR
