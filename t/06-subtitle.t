@@ -10,12 +10,12 @@ unless ( $ENV{DEV_TESTING} ) {
 }
 
 BEGIN {
-    use_ok( 'File::TVShow::Parse' ) || print "Bail out!\n";
+    use_ok( 'File::TVShow::Info' ) || print "Bail out!\n";
 }
 
 
 subtest "test.(2015).S01E01.1080p.[ettv].eng.srt" => sub {
-  my $obj = File::TVShow::Parse->new("test.(2015).S01E01.1080p.[ettv].eng.srt");
+  my $obj = File::TVShow::Info->new("test.(2015).S01E01.1080p.[ettv].eng.srt");
   can_ok($obj, '_isolate_name_year');
   is($obj->{show_name}, "test", "Show name only contains test");
   can_ok($obj, 'has_year');
@@ -56,7 +56,7 @@ subtest "test.(2015).S01E01.1080p.[ettv].eng.srt" => sub {
 };
 
 subtest "test.(2015).S01E01.1080p.[ettv].en.srt" => sub {
-  my $obj = File::TVShow::Parse->new("test.(2015).S01E01.1080p.[ettv].en.srt");
+  my $obj = File::TVShow::Info->new("test.(2015).S01E01.1080p.[ettv].en.srt");
   can_ok($obj, '_isolate_name_year');
   is($obj->{show_name}, "test", "Show name only contains test");
   can_ok($obj, 'has_year');
@@ -94,7 +94,7 @@ subtest "test.(2015).S01E01.1080p.[ettv].en.srt" => sub {
 
 subtest "Teen.wolf.S01E02.720p.vtv.smi" => sub {
 
-  my $obj = File::TVShow::Parse->new("Teen.wolf.S01E02.720p.vtv.smi");
+  my $obj = File::TVShow::Info->new("Teen.wolf.S01E02.720p.vtv.smi");
   $obj->_isolate_name_year();
   is($obj->{show_name}, "Teen.wolf", "Show name is Teen.wolf");
   is($obj->has_year(), 0, "has_year is: False");
@@ -110,7 +110,7 @@ subtest "Teen.wolf.S01E02.720p.vtv.smi" => sub {
 
 subtest "The.4400.S01E02.avi" => sub {
 
-  my $obj = File::TVShow::Parse->new("The.4400.S01E02.avi");
+  my $obj = File::TVShow::Info->new("The.4400.S01E02.avi");
   $obj->_isolate_name_year();
   is($obj->{show_name}, "The.4400", "Show name is The.4400");
   is($obj->{year}, undef, "year is not defined");

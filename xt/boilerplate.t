@@ -50,8 +50,7 @@ TODO: {
     "placeholder date/time"       => qr(Date/time)
   );
 
-  module_boilerplate_ok('lib/File/TVShow/Parse.pm');
+  module_boilerplate_ok('lib/File/TVShow/Info.pm');
 
 
 }
-

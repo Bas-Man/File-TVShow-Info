@@ -10,18 +10,18 @@ unless ( $ENV{DEV_TESTING} ) {
 }
 
 BEGIN {
-    use_ok( 'File::TVShow::Parse' ) || print "Bail out!\n";
+    use_ok( 'File::TVShow::Info' ) || print "Bail out!\n";
 }
 
 
 subtest "Not a valid TV Show file." => sub {
-  my $obj = File::TVShow::Parse->new("test.avi");
+  my $obj = File::TVShow::Info->new("test.avi");
   can_ok($obj, 'is_tv_show');
   is($obj->is_tv_show(),0, "This is not a TV Show file.");
 };
 
 subtest "ByDate" => sub {
-  my $obj2 = File::TVShow::Parse->new("Series Name.2018.01.03.Episode_name.avi");
+  my $obj2 = File::TVShow::Info->new("Series Name.2018.01.03.Episode_name.avi");
   is($obj2->is_tv_show(),1, "This is a TV Show.");
   can_ok($obj2, "show_name");
   is($obj2->show_name(), "Series Name", "Show name is Series Name");

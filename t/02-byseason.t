@@ -10,12 +10,12 @@ unless ( $ENV{DEV_TESTING} ) {
 }
 
 BEGIN {
-    use_ok( 'File::TVShow::Parse' ) || print "Bail out!\n";
+    use_ok( 'File::TVShow::Info' ) || print "Bail out!\n";
 }
 
 
 subtest "SXXEXX" => sub {
-  my $obj = File::TVShow::Parse->new("test.S01E01.avi");
+  my $obj = File::TVShow::Info->new("test.S01E01.avi");
   is($obj->is_tv_show(), 1, "This is a valid TV show");
   is($obj->show_name(), "test", "show name is test");
   is($obj->is_by_date(), 0, "This is not sorted by date");
@@ -35,7 +35,7 @@ subtest "SXXEXX" => sub {
 };
 
 subtest "SXXEXXEXX" => sub {
-  my $obj = File::TVShow::Parse->new("test.S01E01E02.avi");
+  my $obj = File::TVShow::Info->new("test.S01E01E02.avi");
   is($obj->is_tv_show(), 1, "This is a valid TV show");
   is($obj->show_name(), "test", "show name is test");
   is($obj->is_by_date(), 0, "This is not sorted by date");
@@ -53,7 +53,7 @@ subtest "SXXEXXEXX" => sub {
 };
 
 subtest "SXXEXX with Episode Name" => sub {
-  my $obj = File::TVShow::Parse->new("test.S01E02.EpiName.avi");
+  my $obj = File::TVShow::Info->new("test.S01E02.EpiName.avi");
   is($obj->is_tv_show(), 1, "This is a valid TV show");
   is($obj->show_name(), "test", "show name is test");
   is($obj->is_multi_episode(), 0,"This is not a multi-episode file.");
@@ -63,7 +63,7 @@ subtest "SXXEXX with Episode Name" => sub {
 };
 
 subtest "SXXEXXEXX with Episode Name" => sub {
-  my $obj = File::TVShow::Parse->new("test.S01E02E03.EpiName.avi");
+  my $obj = File::TVShow::Info->new("test.S01E02E03.EpiName.avi");
   is($obj->is_tv_show(), 1, "This is a valid TV show");
   is($obj->show_name(), "test", "show name is test");
   is($obj->is_multi_episode(), 1, "This is a multi-episode file.");
