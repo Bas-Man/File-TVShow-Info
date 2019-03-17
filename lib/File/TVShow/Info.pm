@@ -1,4 +1,4 @@
-package File::TVShow::Parse;
+package File::TVShow::Info;
 
 use 5.006;
 use strict;
@@ -8,7 +8,7 @@ use vars qw(@filePatterns);
 
 =head1 NAME
 
-File::TVShow::Parse - Perl meta data extractor from file name for TV Show file.
+File::TVShow::Info - Perl meta data extractor from file name for TV Show file.
 
 =head1 VERSION
 
@@ -28,8 +28,8 @@ Note: This module will be modelled off L<https://metacpan.org/pod/Video::Filenam
 
 If the file name is parsed and can not be identified as a TV show then L</is_tv_show> will return 0.
 
-    use File::TVShow::Parse;
-    my $show = File::TVShow::Parse->new('file');
+    use File::TVShow::Info;
+    my $show = File::TVShow::Info->new('file');
 
 =cut
 
@@ -104,9 +104,9 @@ If the file name is parsed and can not be identified as a TV show then L</is_tv_
 
 =head2 new
 
-Create a Parse object to extract meta information from the file name.
+Create a Info object to extract meta information from the file name.
 
-    my $show = File::TVShow::Parse->new('file');
+    my $show = File::TVShow::Info->new('file');
 
 =cut
 
@@ -723,8 +723,8 @@ Adam Spann, C<< <baspann at gmail.com> >>
 
 =head1 BUGS
 
-Please report any bugs or feature requests to C<bug-file-tvshow-parse at rt.cpan.org>, or through
-the web interface at L<https://rt.cpan.org/NoAuth/ReportBug.html?Queue=File-TVShow-Parse>.  I will be notified, and then you'll
+Please report any bugs or feature requests to C<bug-file-tvshow-info at rt.cpan.org>, or through
+the web interface at L<https://rt.cpan.org/NoAuth/ReportBug.html?Queue=File-TVShow-Info>.  I will be notified, and then you'll
 automatically be notified of progress on your bug as I make changes.
 
 
@@ -734,7 +734,7 @@ automatically be notified of progress on your bug as I make changes.
 
 You can find documentation for this module with the perldoc command.
 
-    perldoc File::TVShow::Parse
+    perldoc File::TVShow::Info
 
 
 You can also look for information at:
@@ -743,19 +743,19 @@ You can also look for information at:
 
 =item * RT: CPAN's request tracker (report bugs here)
 
-L<https://rt.cpan.org/NoAuth/Bugs.html?Dist=File-TVShow-Parse>
+L<https://rt.cpan.org/NoAuth/Bugs.html?Dist=File-TVShow-Info>
 
 =item * AnnoCPAN: Annotated CPAN documentation
 
-L<http://annocpan.org/dist/File-TVShow-Parse>
+L<http://annocpan.org/dist/File-TVShow-Info>
 
 =item * CPAN Ratings
 
-L<https://cpanratings.perl.org/d/File-TVShow-Parse>
+L<https://cpanratings.perl.org/d/File-TVShow-Info>
 
 =item * Search CPAN
 
-L<https://metacpan.org/release/File-TVShow-Parse>
+L<https://metacpan.org/release/File-TVShow-Info>
 
 =back
 
@@ -776,4 +776,4 @@ See L<http://dev.perl.org/licenses/> for more information.
 
 =cut
 
-1; # End of File::TVShow::Parse
+1; # End of File::TVShow::Info

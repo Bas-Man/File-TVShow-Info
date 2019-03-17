@@ -1,4 +1,4 @@
-File-TVShow-Parse
+File-TVShow-Info
 
 The README is used to introduce the module and provide instructions on
 how to install the module, any machine dependencies it may have (for
@@ -26,21 +26,21 @@ SUPPORT AND DOCUMENTATION
 After installing, you can find documentation for this module with the
 perldoc command.
 
-    perldoc File::TVShow::Parse
+    perldoc File::TVShow::Info
 
 You can also look for information at:
 
     RT, CPAN's request tracker (report bugs here)
-        https://rt.cpan.org/NoAuth/Bugs.html?Dist=File-TVShow-Parse
+        https://rt.cpan.org/NoAuth/Bugs.html?Dist=File-TVShow-Info
 
     AnnoCPAN, Annotated CPAN documentation
-        http://annocpan.org/dist/File-TVShow-Parse
+        http://annocpan.org/dist/File-TVShow-Info
 
     CPAN Ratings
-        https://cpanratings.perl.org/d/File-TVShow-Parse
+        https://cpanratings.perl.org/d/File-TVShow-Info
 
     Search CPAN
-        https://metacpan.org/release/File-TVShow-Parse
+        https://metacpan.org/release/File-TVShow-Info
 
 
 LICENSE AND COPYRIGHT
@@ -52,4 +52,3 @@ under the terms of either: the GNU General Public License as published
 by the Free Software Foundation; or the Artistic License.
 
 See L<http://dev.perl.org/licenses/> for more information.
-
