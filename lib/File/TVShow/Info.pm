@@ -41,16 +41,6 @@ If the file name is parsed and can not be identified as a TV show then L</is_tv_
                 # Perl < v5.10
                 re_compat => '(.*?)[.\s_-](\d{4})[.\s_-](\d{1,2})[.\s_-](\d{1,2})(?:[.\s_-](.*)|)[.](?<ext>[a-z]{3})$',
                 keys_compat => [qw(filename show_name year month date epname ext)],
-
-                test_funcs => [1, 0], # TV Episode
-                test_keys => [qw(filename show_name year month date epname ext)],
-                test_files => [
-                        ['Series Name.2018.01.03.Episode_name.avi', 'Series Name', '2018', '01', '03', 'Episode_name', 'avi'],
-                        ['Series Name 2018 02 03 Episode_name.avi', 'Series Name', '2018', '02', '03', 'Episode_name', 'avi'],
-                        ['Series.Name.2018.03.03.Episode_name.avi', 'Series.Name', '2018', '03', '03', 'Episode_name', 'avi'],
-                        ['Series Name 2018 04 03.avi', 'Series Name', '2018', '04', '03', undef, 'avi'],
-                        ['Series.Name.2018.05.03.avi', 'Series.Name', '2018', '05', '03', undef, 'avi'],
-                ],
         },
         { # TV Show Support - SssEee or Season_ss_Episode_ss
                 # Perl > v5.10
@@ -59,26 +49,6 @@ If the file name is parsed and can not be identified as a TV show then L</is_tv_
                 # Perl < v5.10
                 re_compat => '^(?:(.*?)[\/\s._-]+)?(?:s|se|season|series)[\s._-]?(\d{1,2})[x\/\s._-]*(?:e|ep|episode|[\/\s._-]+)[\s._-]?(\d{1,2})(?:-?(?:(?:e|ep)[\s._]*)?(\d{1,2}))?(?:[\s._]?(?:p|part)[\s._]?(\d+))?([a-z])?(?:[\/\s._-]*([^\/]+?))?[.](?<ext>[a-z]{3})$',
                 keys_compat => [qw(show_name season episode endep part subep epname)],
-
-                test_funcs => [1, 1], # TV Episode
-                test_keys => [qw(filename show_name guess-name season episode endep part subep epname ext)],
-                test_files => [
-                        ['Series Name.S01E02.Episode_name.avi', 'Series Name', undef, 1, 2, undef, undef, undef, 'Episode_name', 'avi'],
-                        ['Series Name S01E02.Episode_name.avi', 'Series Name', undef, 1, 2, undef, undef, undef, 'Episode_name', 'avi'],
-                        ['Series Name S01E02/Episode_name.avi', 'Series Name', undef, 1, 2, undef, undef, undef, 'Episode_name', 'avi'],
-                        ['Series/Name S01E02/Episode_name.avi', 'Name', 'Series Name', 1, 2, undef, undef, undef, 'Episode_name', 'avi'],
-                        ['Series Name.S01E02a.Episode_name.avi', 'Series Name', undef, 1, 2, undef, undef, 'a', 'Episode_name', 'avi'],
-                        ['Series Name.S01E02p4.Episode_name.avi', 'Series Name', undef, 1, 2, undef, 4, undef, 'Episode_name', 'avi'],
-                        ['Series Name.S01E02-03.Episode_name.avi', 'Series Name', undef, 1, 2, 3, undef, undef, 'Episode_name', 'avi'],
-                        ['Series Name.S01E02-E03.Episode_name.avi', 'Series Name', undef, 1, 2, 3, undef, undef, 'Episode_name', 'avi'],
-                        ['Series Name.S01E02E.03.Episode_name.avi', 'Series Name', undef, 1, 2, 3, undef, undef, 'Episode_name', 'avi'],
-                        ['Series Name S01E02E03/Episode_name.avi', 'Series Name', undef, 1, 2, 3, undef, undef, 'Episode_name', 'avi'],
-                        ['Series Name.Season_01.Episode_02.Episode_name.avi', 'Series Name', undef, 1, 2, undef, undef, undef, 'Episode_name', 'avi'],
-                        ['Series Name.Se01.Ep02.Episode_name.avi', 'Series Name', undef, 1, 2, undef, undef, undef, 'Episode_name', 'avi'],
-                        ['Series Name.Season_01.Episode_02.Episode_name.avi', 'Series Name', undef, 1, 2, undef, undef, undef, 'Episode_name', 'avi'],
-                        ['Series Name.Season_01.Episode_02.Episode_name.avi', 'Series Name', undef, 1, 2, undef, undef, undef, 'Episode_name', 'avi'],
-                        ['Series Name Season_01.02.Episode_name.avi', 'Series Name', undef, 1, 2, undef, undef, undef, 'Episode_name', 'avi'],
-                ],
         },
         { # TV Show Support - sxee
                 # Perl > v5.10
