@@ -35,38 +35,38 @@ If the file name is parsed and can not be identified as a TV show then L</is_tv_
 
 @filePatterns = (
         { # TV Show Support -   By Date no Season or Episode
-                # Perl > v5.10
-                re => '(?<show_name>.*?)[.\s_-](?<year>\d{4})[.\s_-](?<month>\d{1,2})[.\s_-](?<date>\d{1,2})(?:[.\s_-](?<epname>.*)|)[.](?<ext>[a-z]{3})$',
+          # Perl > v5.10
+          re => '(?<show_name>.*?)[.\s_-](?<year>\d{4})[.\s_-](?<month>\d{1,2})[.\s_-](?<date>\d{1,2})(?:[.\s_-](?<epname>.*)|)[.](?<ext>[a-z]{3})$',
 
-                # Perl < v5.10
-                re_compat => '(.*?)[.\s_-](\d{4})[.\s_-](\d{1,2})[.\s_-](\d{1,2})(?:[.\s_-](.*)|)[.](?<ext>[a-z]{3})$',
-                keys_compat => [qw(filename show_name year month date epname ext)],
+          # Perl < v5.10
+          re_compat => '(.*?)[.\s_-](\d{4})[.\s_-](\d{1,2})[.\s_-](\d{1,2})(?:[.\s_-](.*)|)[.](?<ext>[a-z]{3})$',
+          keys_compat => [qw(filename show_name year month date epname ext)],
         },
         { # TV Show Support - SssEee or Season_ss_Episode_ss
-                # Perl > v5.10
-                re => '^(?:(?<show_name>.*?)[\/\s._-]+)?(?:s|se|season|series)[\s._-]?(?<season>\d{1,2})[x\/\s._-]*(?:e|ep|episode|[\/\s._-]+)[\s._-]?(?<episode>\d{1,2})(?:-?(?:(?:e|ep)[\s._]*)?(?<endep>\d{1,2}))?(?:[\s._]?(?:p|part)[\s._]?(?<part>\d+))?(?<subep>[a-z])?(?:[\/\s._-]*(?<epname>[^\/]+?))?[.](?<ext>[a-z]{3})$',
+          # Perl > v5.10
+          re => '^(?:(?<show_name>.*?)[\/\s._-]+)?(?:s|se|season|series)[\s._-]?(?<season>\d{1,2})[x\/\s._-]*(?:e|ep|episode|[\/\s._-]+)[\s._-]?(?<episode>\d{1,2})(?:-?(?:(?:e|ep)[\s._]*)?(?<endep>\d{1,2}))?(?:[\s._]?(?:p|part)[\s._]?(?<part>\d+))?(?<subep>[a-z])?(?:[\/\s._-]*(?<epname>[^\/]+?))?[.](?<ext>[a-z]{3})$',
 
-                # Perl < v5.10
-                re_compat => '^(?:(.*?)[\/\s._-]+)?(?:s|se|season|series)[\s._-]?(\d{1,2})[x\/\s._-]*(?:e|ep|episode|[\/\s._-]+)[\s._-]?(\d{1,2})(?:-?(?:(?:e|ep)[\s._]*)?(\d{1,2}))?(?:[\s._]?(?:p|part)[\s._]?(\d+))?([a-z])?(?:[\/\s._-]*([^\/]+?))?[.](?<ext>[a-z]{3})$',
-                keys_compat => [qw(show_name season episode endep part subep epname)],
+          # Perl < v5.10
+          re_compat => '^(?:(.*?)[\/\s._-]+)?(?:s|se|season|series)[\s._-]?(\d{1,2})[x\/\s._-]*(?:e|ep|episode|[\/\s._-]+)[\s._-]?(\d{1,2})(?:-?(?:(?:e|ep)[\s._]*)?(\d{1,2}))?(?:[\s._]?(?:p|part)[\s._]?(\d+))?([a-z])?(?:[\/\s._-]*([^\/]+?))?[.](?<ext>[a-z]{3})$',
+          keys_compat => [qw(show_name season episode endep part subep epname)],
         },
         { # TV Show Support - sxee
-                # Perl > v5.10
-                re => '^(?:(?<show_name>.*?)[\/\s._-]*)?(?<openb>\[)?(?<season>\d{1,2})[x\/](?<episode>\d{1,2})(?:-(?:\k<season>x)?(?<endep>\d{1,2}))?(?(<openb>)\])(?:[\s._-]*(?<epname>[^\/]+?))?[.](?<ext>[a-z]{3})$',
+          # Perl > v5.10
+          re => '^(?:(?<show_name>.*?)[\/\s._-]*)?(?<openb>\[)?(?<season>\d{1,2})[x\/](?<episode>\d{1,2})(?:-(?:\k<season>x)?(?<endep>\d{1,2}))?(?(<openb>)\])(?:[\s._-]*(?<epname>[^\/]+?))?[.](?<ext>[a-z]{3})$',
 
-                # Perl < v5.10
-                re_compat => '^(?:(.*?)[\/\s._-]*)?\[?(\d{1,2})[x\/](\d{1,2})(?:-(?:\d{1,2}x)?(\d{1,2}))?\]?(?:[\s._-]*([^\/]+?))?[.](?<ext>[a-z]{3})$',
-                keys_compat => [qw(show_name season episode endep epname)],
+          # Perl < v5.10
+          re_compat => '^(?:(.*?)[\/\s._-]*)?\[?(\d{1,2})[x\/](\d{1,2})(?:-(?:\d{1,2}x)?(\d{1,2}))?\]?(?:[\s._-]*([^\/]+?))?[.](?<ext>[a-z]{3})$',
+          keys_compat => [qw(show_name season episode endep epname)],
 
-                test_funcs => [1, 1], # TV Episode
-                test_keys => [qw(filename show_name season episode endep epname ext)],
-                test_files => [
-                        ['Series Name.1x02.Episode_name.avi', 'Series Name', 1, 2, undef, 'Episode_name', 'avi'],
-                        ['Series Name 1x02.Episode_name.avi', 'Series Name', 1, 2, undef, 'Episode_name', 'avi'],
-                        ['Series Name.[1x02].Episode_name.avi', 'Series Name', 1, 2, undef, 'Episode_name', 'avi'],
-                        ['Series Name.1x02-03.Episode_name.avi', 'Series Name', 1, 2, 3, 'Episode_name', 'avi'],
-                        ['Series Name.1x02-1x03.Episode_name.avi', 'Series Name', 1, 2, 3, 'Episode_name', 'avi'],
-                ],
+          test_funcs => [1, 1], # TV Episode
+          test_keys => [qw(filename show_name season episode endep epname ext)],
+          test_files => [
+          ['Series Name.1x02.Episode_name.avi', 'Series Name', 1, 2, undef, 'Episode_name', 'avi'],
+          ['Series Name 1x02.Episode_name.avi', 'Series Name', 1, 2, undef, 'Episode_name', 'avi'],
+          ['Series Name.[1x02].Episode_name.avi', 'Series Name', 1, 2, undef, 'Episode_name', 'avi'],
+          ['Series Name.1x02-03.Episode_name.avi', 'Series Name', 1, 2, 3, 'Episode_name', 'avi'],
+          ['Series Name.1x02-1x03.Episode_name.avi', 'Series Name', 1, 2, 3, 'Episode_name', 'avi'],
+          ],
         },
 );
 
@@ -133,44 +133,44 @@ sub new {
     bless $self, $class;
     # Read default values
     for my $key (qw(file name season episode part options)) {
-        last unless defined $_[0];
-        if (ref $_[0]) {
-                # Use a hashref for values
-                while (my ($key, $value) = each %{$_[0]}) {
-                        $self->{$key} = $value;
-                }
-        } else {
-                $self->{$key} = shift;
+      last unless defined $_[0];
+      if (ref $_[0]) {
+        # Use a hashref for values
+        while (my ($key, $value) = each %{$_[0]}) {
+          $self->{$key} = $value;
         }
+      } else {
+        $self->{$key} = shift;
+      }
     }
 
     $self->{filename} = $self->{file};
 
     # Run filename through list of patterns
     for my $pat (@filePatterns) {
-            if ($] >= 5.010000) {
-                  if ($self->{file} =~ /$pat->{re}/i) {
-                  # We have a match we will exit after this loop
-                      $self->{regex} = $pat->{re};
-                        while (my ($key, $data) = each %-) {
-                            $self->{$key} = $data->[0] if defined $data->[0] && !defined $self->{$key};
-                          }
-                          # We have a match so we are skipping all other @filePatterns
-                          last;
-                  }
-            } else { # No named groups in regexes
-                    my @matches;
-                    if (@matches = ($self->{file} =~ /$pat->{re_compat}/i)) {
-                            #print "MACTHES: ".join(',', @matches)."\n";
-                            $self->{regex} = $pat->{re_compat};
-                            my $count = 0;
-                            foreach my $key (@{$pat->{keys_compat}}) {
-                                    $self->{$key} = $matches[$count] unless defined $self->{$key};
-                                    $count++;
-                            }
-                            last;
-                    }
-            }
+      if ($] >= 5.010000) {
+        if ($self->{file} =~ /$pat->{re}/i) {
+          # We have a match we will exit after this loop
+          $self->{regex} = $pat->{re};
+          while (my ($key, $data) = each %-) {
+            $self->{$key} = $data->[0] if defined $data->[0] && !defined $self->{$key};
+          }
+          # We have a match so we are skipping all other @filePatterns
+          last;
+        }
+      } else { # No named groups in regexes
+        my @matches;
+        if (@matches = ($self->{file} =~ /$pat->{re_compat}/i)) {
+          #print "MACTHES: ".join(',', @matches)."\n";
+          $self->{regex} = $pat->{re_compat};
+          my $count = 0;
+          foreach my $key (@{$pat->{keys_compat}}) {
+            $self->{$key} = $matches[$count] unless defined $self->{$key};
+            $count++;
+          }
+          last;
+        }
+      }
     }
     $self->_isolate_name_year();
     $self->_get_resolution();
