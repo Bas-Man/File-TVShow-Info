@@ -541,13 +541,13 @@ sub is_by_season {
     return 0;
 }
 
-=head1 Internal Methods
+#=head1 Internal Methods
 
-=head2 _isolate_name_year
+#=head2 _isolate_name_year
 
-This is an internal method called by new(). Your should B<NOT> call this yourself.
+#This is an internal method called by new(). Your should B<NOT> call this yourself.
 
-=cut
+#=cut
 
 sub _isolate_name_year {
 
@@ -580,11 +580,11 @@ sub _isolate_name_year {
     }
 }
 
-=head2 _get_release_group
+#=head2 _get_release_group
 
-This is an internal method called by new(). You should B<NOT> call if yourself.
+#This is an internal method called by new(). You should B<NOT> call if yourself.
 
-=cut
+#=cut
 
 sub _get_release_group {
 
@@ -604,11 +604,11 @@ sub _get_release_group {
     }
 }
 
-=head2 _get_resolution
+#=head2 _get_resolution
 
-This is an internal method called by new(). You should B<NOT> call it yourself.
+#This is an internal method called by new(). You should B<NOT> call it yourself.
 
-=cut
+#=cut
 
 sub _get_resolution {
 
@@ -629,13 +629,13 @@ sub _get_resolution {
 
 }
 
-=head2 _is_tv_subtitle
+#=head2 _is_tv_subtitle
 
-This is an internal method called by new(). You should B<NOT> call it yourself
+#This is an internal method called by new(). You should B<NOT> call it yourself
 
-This will determine if the file is a subtitle and define {is_subtitle}
+#This will determine if the file is a subtitle and define {is_subtitle}
 
-=cut
+#=cut
 
 sub _is_tv_subtitle {
 
@@ -651,14 +651,14 @@ sub _is_tv_subtitle {
     }
 }
 
-=head2 _get_subtitle_lang
+#=head2 _get_subtitle_lang
 
-This is an internal method called by new(). You should B<NOT> call it yourself.
+#This is an internal method called by new(). You should B<NOT> call it yourself.
 
-This will get the subtitles language from the file name if present. {subtitle_lang}.
-Requires that {is_subtitle} is defined.
+#This will get the subtitles language from the file name if present. {subtitle_lang}.
+#Requires that {is_subtitle} is defined.
 
-=cut
+#=cut
 
 sub _get_subtitle_lang {
 
