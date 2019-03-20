@@ -115,7 +115,7 @@ Note: year will be defined in two cases.
 =item * resolution:
 Show resolution 480p/720p and so on. This will be '' if not found.
 
-=item * ripper
+=item * release_group
 
 =item * is_subtitle
 
@@ -174,7 +174,7 @@ sub new {
     }
     $self->_isolate_name_year();
     $self->_get_resolution();
-    $self->_get_ripper();
+    $self->_get_release_group();
     $self->_is_tv_subtitle();
     $self->_get_subtitle_lang();
     return $self;
@@ -390,19 +390,19 @@ sub resolution {
     #return '';
 }
 
-=head2 ripper
+=head2 release_group
 
-Return ripper found in the file name. Return '' if {ripper} is not defined.
+Return release_group found in the file name. Return '' if {release_group} is not defined.
 
 =cut
 
-sub ripper {
+sub release_group {
 
     my $self = shift;
-    my $attr = 'ripper';
+    my $attr = 'release_group';
     $self->__get_obj_attr($attr);
 
-    #return $self->{ripper} if defined $self->{ripper};
+    #return $self->{release_group} if defined $self->{release_group};
     #return '';
 }
 
@@ -580,13 +580,13 @@ sub _isolate_name_year {
     }
 }
 
-=head2 _get_ripper
+=head2 _get_release_group
 
 This is an internal method called by new(). You should B<NOT> call if yourself.
 
 =cut
 
-sub _get_ripper {
+sub _get_release_group {
 
     my $self = shift;
 
@@ -595,12 +595,12 @@ sub _get_ripper {
 
     my $regex;
     if ($] >= 5.010000) { # Perl 5.10 > has regex group support
-      $regex = '[\[]?(?P<ripper>fov|vtv|ettv|rmteam|eztv)[]]?';
+      $regex = '[\[]?(?P<release_group>fov|vtv|ettv|rmteam|eztv)[]]?';
     } else { # Perl versions below 5.10 do not have group support
       $regex = '[\[]?(fov|vtv|ettv|rmteam|eztv)[]]?';
     }
     if ($self->{epname} =~ /$regex/gi) {
-      $self->{ripper} = $+{ripper} || $1; # $1 equals group ripper
+      $self->{release_group} = $+{release_group} || $1; # $1 equals group release_group
     }
 }
 
