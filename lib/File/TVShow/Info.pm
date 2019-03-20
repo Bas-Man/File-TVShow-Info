@@ -112,6 +112,8 @@ Note: year will be defined in two cases.
   Two: File name contains YYYY.MM.DD that are identified by date. These are mutually
   exclusive and no conflict is expected.
 
+=item * source
+
 =item * resolution:
 Show resolution 480p/720p and so on. This will be '' if not found.
 
@@ -247,6 +249,14 @@ sub episode {
     #return '';
 
 }
+
+=head2 source
+
+Return the source of tv show. Return '' if not defined.
+Yet to be coded.
+
+=cut
+
 
 =head2 is_multi_episode
 
@@ -579,6 +589,8 @@ sub _isolate_name_year {
       $self->{show_name} = $+{show_name} || $1; # $1 equals group show_name
     }
 }
+
+# TODO: Code _get_source (HTDV, AMZ ?)
 
 #=head2 _get_release_group
 
