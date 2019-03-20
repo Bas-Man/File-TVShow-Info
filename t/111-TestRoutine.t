@@ -19,11 +19,11 @@ use Data::Dumper;
 $Term::ANSIColor::AUTORESET = 1;
 
 @test_data = (
-  {
+  { # TV Show Support -   By Season and Episode
   test_bool_results => [ 1, 0, 0], # is_tv_show is_tv_subtitle is_multi_episode
   test_keys => [qw(filename show_name year season episode epname ext)],
   season => 1,
-  name => 'Shows by Season',
+  name => 'Shows by Season without year tests',
   test_files => [
     ['Series Name.S01E01.Episode_name.avi', 'Series Name', '', "01", "01", 'Episode_name', 'avi'],
     ['Series Name.S01E02.Episode_name.avi', 'Series Name', '', "01", "02", 'Episode_name', 'avi'],
@@ -33,11 +33,11 @@ $Term::ANSIColor::AUTORESET = 1;
     ['Series Name.S01E06.avi', 'Series Name', '', "01", "06", '', 'avi'],
     ],
   },
-  {
+  { # TV Show Support -   By Season and Episode
   test_bool_results => [ 1, 0, 0], # is_tv_show is_tv_subtitle is_multi_episode
   test_keys => [qw(filename show_name year season episode epname ext)],
   season => 1,
-  name => 'Shows by Season',
+  name => 'Shows by Season with year tests',
   test_files => [
     ['Series Name 2018.S01E01.Episode_name.avi', 'Series Name', '2018', "01", "01", 'Episode_name', 'avi'],
     ['Series Name.(2018).S01E02.Episode_name.avi', 'Series Name','2018', "01", "02", 'Episode_name', 'avi'],
@@ -112,7 +112,7 @@ sub testVideoFilename {
         } # end get method tests $j
         print GREEN "PASSED: $file->{file}\n";
       }
-        print "$test_case->{name} Complete\n\n";
+      print "$test_case->{name} Complete\n\n";
     }
     print "Testing Complete.\n";
 }
