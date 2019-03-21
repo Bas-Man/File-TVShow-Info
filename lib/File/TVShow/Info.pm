@@ -101,6 +101,8 @@ Show season
 =item * episode:
 Show episode
 
+=item * country
+
 =item * endep: (Naming under consideration)
 last Episode number found when file name contains SXXEXXEXX
 
@@ -133,6 +135,9 @@ sub new {
     my $class = shift;
     my $self =  {};
     bless $self, $class;
+    # Set default attributes
+    @{$self->{valid_countries}} =  qw( US UK KR);
+
     # Read default values
     for my $key (qw(file name season episode part options)) {
       last unless defined $_[0];
@@ -179,6 +184,7 @@ sub new {
     $self->_get_release_group();
     $self->_is_tv_subtitle();
     $self->_get_subtitle_lang();
+    $self->_get_country();
     return $self;
 }
 
@@ -431,6 +437,19 @@ sub episode_name {
 
 }
 
+=head2 country
+
+Retrun country found in {show_name}. Return '' if not defined
+
+=cut
+
+sub country {
+
+    my $self = shift;
+    return $self->{country} if defined $self->{country};
+    return '';
+}
+
 =head2 ext
 
 Return file extension. {ext}
@@ -513,6 +532,22 @@ sub subtitle_lang {
     #return $self->{subtitle_lang} if defined $self->{subtitle_lang};
     #return '';
 
+}
+
+=head2 has_country
+
+Return 1 if country was found, Return 0 if {country} is not defined.
+
+Must also return 1 for is_tv_subtitle()
+
+=cut
+
+sub has_country {
+
+    my $self = shift;
+
+    return 1 if (($self->is_tv_show()) && (defined $self->{country}));
+    return 0;
 }
 
 =head2 is_by_date
@@ -641,6 +676,28 @@ sub _get_resolution {
 
 }
 
+sub _get_country {
+
+  my $self = shift;
+
+  # This is not a tv show file. Exit method now.
+  return if !$self->is_tv_show();
+
+  my $regex;
+  if ($] >= 5.010000) { # Perl 5.10 > has regex group support
+    $regex = '[(]?(?P<country>\w{2})[)]?$';
+  } else { # Perl versions below 5.10 do not have group support
+    $regex = '[(]?(\w{2})[)]?$';
+  }
+  if ($self->{show_name} =~ /$regex/g) {
+    # Check if string at the end of {show_name} is in the array of accepted
+    # country strings. If not, we do not set {country}
+    if (grep { $_ eq $1 } @{$self->{valid_countries}}) {
+      $self->{country} = $+{country} || $1; # $1 equals group country
+    }
+  }
+}
+
 #=head2 _is_tv_subtitle
 
 #This is an internal method called by new(). You should B<NOT> call it yourself
@@ -658,6 +715,7 @@ sub _is_tv_subtitle {
 
     my @list_of_subtitle_ext = qw(srt smi ssa ass vtt);
 
+    # Check if {ext} is a subtitle extension {is_subtitle} set to 1 if true.
     if (grep { $_ eq $self->{ext}} @list_of_subtitle_ext) {
       $self->{is_subtitle} = 1;
     }
