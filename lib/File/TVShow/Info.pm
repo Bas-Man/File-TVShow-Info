@@ -185,6 +185,7 @@ sub new {
     $self->_is_tv_subtitle();
     $self->_get_subtitle_lang();
     $self->_get_country();
+    $self->_get_episode_name();
     return $self;
 }
 
@@ -432,7 +433,7 @@ sub episode_name {
 
     my $self = shift;
 
-    return $self->{episode_title} if defined $self->{episode_title};
+    return $self->{episode_name} if defined $self->{episode_name};
     return '';
 
 }
@@ -626,6 +627,24 @@ sub _isolate_name_year {
 }
 
 # TODO: Code _get_source (HTDV, AMZ ?)
+
+sub _get_episode_name {
+
+    my $self = shift;
+
+    # This is not a tv show file. Exit method now.
+    return if !$self->is_tv_show() || !defined $self->{extra_meta};
+
+    my $regex;
+    if ($] >= 5.010000) { # Perl 5.10 > has regex group support
+      $regex = '^(?<episode_name>.*)[\s.]?(?:(?:(?:\.|\ )[0-9]{3,4})(?:p|i)|\.SD)';
+    } else { # Perl versions below 5.10 do not have group support
+      $regex = '^(.*)[\s.]?(?:(?:(?:\.|\ )[0-9]{3,4})(p|i)|\.SD)';
+    }
+    if ($self->{extra_meta} =~ /$regex/gi) {
+      $self->{episode_name} = $+{episode_name} || $0; # $0 equals group episide_name
+    }
+}
 
 #=head2 _get_release_group
 
