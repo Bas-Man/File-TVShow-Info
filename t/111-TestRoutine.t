@@ -21,30 +21,30 @@ $Term::ANSIColor::AUTORESET = 1;
 @test_data = (
   { # TV Show Support -   By Season and Episode
   test_bool_results => [ 1, 0, 0], # is_tv_show is_tv_subtitle is_multi_episode
-  test_keys => [qw(filename show_name year season episode epname ext)],
+  test_keys => [qw(filename show_name country year season episode epname ext)],
   season => 1,
   name => 'Shows by Season without year tests',
   test_files => [
-    ['Series Name.S01E01.Episode_name.avi', 'Series Name', '', "01", "01", 'Episode_name', 'avi'],
-    ['Series Name.S01E02.Episode_name.avi', 'Series Name', '', "01", "02", 'Episode_name', 'avi'],
-    ['Series Name S01E03.Episode_name.avi', 'Series Name', '', "01", "03", 'Episode_name', 'avi'],
-    ['Series Name S01E04.Episode_name.avi', 'Series Name', '', "01", "04", 'Episode_name', 'avi'],
-    ['Series Name.S01E05.Episode_name.avi', 'Series Name', '', "01", "05", 'Episode_name', 'avi'],
-    ['Series Name.S01E06.avi', 'Series Name', '', "01", "06", '', 'avi'],
+    ['Series Name.S01E01.Episode_name.avi', 'Series Name', '', '', "01", "01", 'Episode_name', 'avi'],
+    ['Series Name.S01E02.Episode_name.avi', 'Series Name', '', '', "01", "02", 'Episode_name', 'avi'],
+    ['Series Name S01E03.Episode_name.avi', 'Series Name', '', '', "01", "03", 'Episode_name', 'avi'],
+    ['Series Name S01E04.Episode_name.avi', 'Series Name', '', '', "01", "04", 'Episode_name', 'avi'],
+    ['Series Name.S01E05.Episode_name.avi', 'Series Name', '', '', "01", "05", 'Episode_name', 'avi'],
+    ['Series Name.S01E06.avi', 'Series Name', '', '', "01", "06", '', 'avi'],
     ],
   },
   { # TV Show Support -   By Season and Episode
   test_bool_results => [ 1, 0, 0], # is_tv_show is_tv_subtitle is_multi_episode
-  test_keys => [qw(filename show_name year season episode epname ext)],
+  test_keys => [qw(filename show_name country year season episode epname ext)],
   season => 1,
   name => 'Shows by Season with year tests',
   test_files => [
-    ['Series Name 2018.S01E01.Episode_name.avi', 'Series Name', '2018', "01", "01", 'Episode_name', 'avi'],
-    ['Series Name.(2018).S01E02.Episode_name.avi', 'Series Name','2018', "01", "02", 'Episode_name', 'avi'],
-    ['Series Name 1971 S01E03.Episode_name.avi', 'Series Name', '1971', "01", "03", 'Episode_name', 'avi'],
-    ['Series Name S01E04.Episode_name.avi', 'Series Name', '', "01", "04", 'Episode_name', 'avi'],
-    ['Series Name.S01E05.Episode_name.avi', 'Series Name', '', "01", "05", 'Episode_name', 'avi'],
-    ['Series Name.S01E06.avi', 'Series Name', '', "01", "06", '', 'avi'],
+    ['Series Name 2018.S01E01.Episode_name.avi', 'Series Name', '', '2018', "01", "01", 'Episode_name', 'avi'],
+    ['Series Name.(2018).S01E02.Episode_name.avi', 'Series Name', '', '2018', "01", "02", 'Episode_name', 'avi'],
+    ['Series Name 1971 S01E03.Episode_name.avi', 'Series Name', '', '1971', "01", "03", 'Episode_name', 'avi'],
+    ['Series Name S01E04.Episode_name.avi', 'Series Name', '', '', "01", "04", 'Episode_name', 'avi'],
+    ['Series Name.S01E05.Episode_name.avi', 'Series Name', '', '', "01", "05", 'Episode_name', 'avi'],
+    ['Series Name.S01E06.avi', 'Series Name', '', '', "01", "06", '', 'avi'],
     ],
   },
   { # TV Show Support -   By Date no Season or Episode
@@ -60,6 +60,25 @@ $Term::ANSIColor::AUTORESET = 1;
     ['Series.Name.2018.05.03.avi', 'Series.Name', '2018', '05', '03', '', 'avi'],
     ],
   },
+  { # TV Show Support -   By Season and Episode Real Data
+  test_bool_results => [ 1, 0, 0], # is_tv_show is_tv_subtitle is_multi_episode
+  test_keys => [qw(filename show_name country year season episode epname ext)],
+  season => 1,
+  name => 'Shows by Season without year tests',
+  test_files => [
+    ['life on mars - S01E01.avi', 'life on mars', '', '', "01", "01", '', 'avi'],
+    ],
+  },
+  { # TV Show Support -   By Season and Episode Real Data with Country
+  test_bool_results => [ 1, 0, 0], # is_tv_show is_tv_subtitle is_multi_episode
+  test_keys => [qw(filename show_name country year season episode epname ext)],
+  season => 1,
+  name => 'Shows by Season with country but without year tests',
+  test_files => [
+    ['Life.on.Mars.US.S01E01.HDTV.XViD-DOT.avi', 'Life.on.Mars.US', 'US', '', "01", "01", 'HDTV.XViD-DOT', 'avi'],
+    ['Life.on.Mars.(US).S01E01.HDTV.XViD-DOT.avi', 'Life.on.Mars.(US)', 'US', '', "01", "01", 'HDTV.XViD-DOT', 'avi'],
+    ],
+  },
 );
 
 sub testVideoFilename {
@@ -69,7 +88,7 @@ sub testVideoFilename {
     my @get_funcs;
     for my $test_case (@test_data) {
       if (defined $test_case->{season}) {
-        @get_funcs = qw(show_name year season episode);
+        @get_funcs = qw(show_name country year season episode);
       } else {
         @get_funcs = qw(show_name year month date);
       }
