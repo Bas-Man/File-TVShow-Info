@@ -14,7 +14,7 @@ BEGIN {
 }
 
 
-subtest "SXXEXX" => sub {
+subtest "test.S01E01.avi" => sub {
   my $obj = File::TVShow::Info->new("test.S01E01.avi");
   is($obj->is_tv_show(), 1, "This is a valid TV show");
   is($obj->show_name(), "test", "show name is test");
@@ -34,7 +34,7 @@ subtest "SXXEXX" => sub {
 
 };
 
-subtest "SXXEXXEXX" => sub {
+subtest "test.S01E01E02.avi" => sub {
   my $obj = File::TVShow::Info->new("test.S01E01E02.avi");
   is($obj->is_tv_show(), 1, "This is a valid TV show");
   is($obj->show_name(), "test", "show name is test");
@@ -52,24 +52,36 @@ subtest "SXXEXXEXX" => sub {
 
 };
 
-subtest "SXXEXX with Episode Name" => sub {
-  my $obj = File::TVShow::Info->new("test.S01E02.EpiName.avi");
+subtest "test.S01E02.EXTRA_META.avi" => sub {
+  my $obj = File::TVShow::Info->new("test.S01E02.extra_meta.avi");
   is($obj->is_tv_show(), 1, "This is a valid TV show");
   is($obj->show_name(), "test", "show name is test");
   is($obj->is_multi_episode(), 0,"This is not a multi-episode file.");
   is($obj->season_episode(), "S01E02", "season_episode returns SO1EO2");
   can_ok($obj, 'episode_name');
-  is($obj->episode_name(), "EpiName", "Episode Name: EpiName");
+  is($obj->episode_name(), "", "Episode Name: ");
 };
 
-subtest "SXXEXXEXX with Episode Name" => sub {
-  my $obj = File::TVShow::Info->new("test.S01E02E03.EpiName.avi");
+subtest "test.S01E02E03.EXTRA_META.avi" => sub {
+  my $obj = File::TVShow::Info->new("test.S01E02E03.extra_meta.avi");
   is($obj->is_tv_show(), 1, "This is a valid TV show");
   is($obj->show_name(), "test", "show name is test");
   is($obj->is_multi_episode(), 1, "This is a multi-episode file.");
   is($obj->season_episode(), "S01E02E03", "season_episode returns SO1EO2E03");
   can_ok($obj, 'episode_name');
-  is($obj->episode_name(), "EpiName", "Episode Name: EpiName");
+  is($obj->episode_name(), "", "Episode Name: ");
 };
+
+subtest "test.S01E02E03.Pilot.720p.avi" => sub {
+  my $obj = File::TVShow::Info->new("test.S01E02E03.Pilot.720p.avi");
+  is($obj->is_tv_show(), 1, "This is a valid TV show");
+  is($obj->show_name(), "test", "show name is test");
+  is($obj->is_multi_episode(), 1, "This is a multi-episode file.");
+  is($obj->season_episode(), "S01E02E03", "season_episode returns SO1EO2E03");
+  can_ok($obj, 'episode_name');
+  is($obj->episode_name(), "Pilot", "Episode Name: Pilot");
+  print Data::Dumper::Dumper($obj);
+};
+
 
 done_testing();

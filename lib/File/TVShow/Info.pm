@@ -642,7 +642,7 @@ sub _get_episode_name {
       $regex = '^(.*)[\s.]?(?:(?:(?:\.|\ )[0-9]{3,4})(p|i)|\.SD)';
     }
     if ($self->{extra_meta} =~ /$regex/gi) {
-      $self->{episode_name} = $+{episode_name} || $0; # $0 equals group episide_name
+      $self->{episode_name} = $+{episode_name} || $0; # $0 equals group episode_name
     }
 }
 
