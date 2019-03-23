@@ -62,11 +62,13 @@ $Term::ANSIColor::AUTORESET = 1;
   },
   { # TV Show Support -   By Season and Episode Real Data
   test_bool_results => [ 1, 0, 0], # is_tv_show is_tv_subtitle is_multi_episode
-  test_keys => [qw(filename show_name country year season episode extra_meta ext)],
+  test_keys => [qw(filename show_name country year season episode episode_name extra_meta ext)],
   season => 1,
   name => 'Shows by Season without year tests',
   test_files => [
-    ['life on mars - S01E01.avi', 'life on mars', '', '', "01", "01", '', 'avi'],
+    ['life on mars - S01E01.avi', 'life on mars', '', '', "01", "01", '', '', 'avi'],
+    ['Luther.S05E03.720p.AMZN.WEB-DL.DDP5.1.H.264-NTb[eztv].mkv', 'Luther', '', '', '05', '03', '', '720p.AMZN.WEB-DL.DDP5.1.H.264-NTb[eztv]', 'mkv'],
+    ['Luther.S05E03.Bogus.720p.AMZN.WEB-DL.DDP5.1.H.264-NTb[eztv].mkv', 'Luther', '', '', '05', '03', 'Bogus', 'Bogus.720p.AMZN.WEB-DL.DDP5.1.H.264-NTb[eztv]', 'mkv'],
     ],
   },
   { # TV Show Support -   By Season and Episode Real Data with Country
@@ -111,6 +113,7 @@ sub testVideoFilename {
           # Skip test if the key does not exit in Info obj
           next if (!defined $attr);
           if ($attr ne $value) {
+            print BLUE "{$keys->[$i]}: ";
             print RED "'$attr' ne '$value'\nFAILED: $file->{file}\n";
             print Dumper($file); exit;
             }
