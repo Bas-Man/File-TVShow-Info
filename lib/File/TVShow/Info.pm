@@ -1,10 +1,10 @@
 package File::TVShow::Info;
 
-use 5.006;
+use 5.10.0;
 use strict;
 use warnings;
 
-use vars qw(@filePatterns);
+use vars qw(@filePatterns @episode_name_patterns);
 
 =head1 NAME
 
@@ -32,6 +32,7 @@ If the file name is parsed and can not be identified as a TV show then L</is_tv_
     my $show = File::TVShow::Info->new('file');
 
 =cut
+
 
 @filePatterns = (
         { # TV Show Support -   By Date no Season or Episode
@@ -67,6 +68,18 @@ If the file name is parsed and can not be identified as a TV show then L</is_tv_
           ['Series Name.1x02-03.Episode_name.avi', 'Series Name', 1, 2, 3, 'Episode_name', 'avi'],
           ['Series Name.1x02-1x03.Episode_name.avi', 'Series Name', 1, 2, 3, 'Episode_name', 'avi'],
           ],
+        },
+);
+
+@episode_name_patterns = (
+        { # Matching name followed by resoltion (name.720p)
+          re => '^(?<episode_name>.*)[\s.]?(?:(?:\.|\ )[0-9]{3,4})(?:p|i)',
+        },
+        { # Matching name follwoed by source
+          re => '^(?<episode_name>.*)[\s.](AMZN|hdtv|SDTV)',
+        },
+        { # Matching name followed by web
+          re => '^(?<episode_name>.*)[\s.](web)',
         },
 );
 
@@ -635,14 +648,20 @@ sub _get_episode_name {
     # This is not a tv show file. Exit method now.
     return if !$self->is_tv_show() || !defined $self->{extra_meta};
 
-    my $regex;
-    if ($] >= 5.010000) { # Perl 5.10 > has regex group support
-      $regex = '^(?<episode_name>.*)[\s.]?(?:(?:(?:\.|\ )[0-9]{3,4})(?:p|i)|\.SD)';
-    } else { # Perl versions below 5.10 do not have group support
-      $regex = '^(.*)[\s.]?(?:(?:(?:\.|\ )[0-9]{3,4})(p|i)|\.SD)';
+    for my $pat (@episode_name_patterns) {
+        if ($self->{extra_meta} =~ /$pat->{re}/i) {
+          # We have a match we will exit after this loop
+          # Use this {re} as our regex
+          $self->{episode_name_regex} = $pat->{re};
+          # We have a match so we are skipping all other @filePatterns
+          last;
+        }
     }
-    if ($self->{extra_meta} =~ /$regex/gi) {
-      $self->{episode_name} = $+{episode_name} || $0; # $0 equals group episode_name
+    # Only do the extraction of we found a matching regex to use
+    if (defined $self->{episode_name_regex}) {
+      if ($self->{extra_meta} =~ /$self->{episode_name_regex}/gi) {
+        $self->{episode_name} = $+{episode_name};
+      }
     }
 }
 

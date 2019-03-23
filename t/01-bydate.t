@@ -39,8 +39,6 @@ subtest "Series Name.2018.01.03.Episode_name.avi" => sub {
   is($obj->ymd(), "2018.01.03", "ymd is 2018.01.03");
   can_ok($obj, 'is_by_season');
   is($obj->is_by_season(), 0, "This is not be season");
-
-  print Data::Dumper::Dumper($obj);
 };
 
 subtest "Series Name.2018.01.03.Episode_name.720p.avi" => sub {
