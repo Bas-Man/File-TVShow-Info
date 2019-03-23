@@ -21,57 +21,59 @@ $Term::ANSIColor::AUTORESET = 1;
 @test_data = (
   { # TV Show Support -   By Season and Episode
   test_bool_results => [ 1, 0, 0], # is_tv_show is_tv_subtitle is_multi_episode
-  test_keys => [qw(filename show_name country year season episode epname ext)],
+  test_keys => [qw(filename show_name country year season episode extra_meta ext)],
   season => 1,
   name => 'Shows by Season without year tests',
   test_files => [
-    ['Series Name.S01E01.Episode_name.avi', 'Series Name', '', '', "01", "01", 'Episode_name', 'avi'],
-    ['Series Name.S01E02.Episode_name.avi', 'Series Name', '', '', "01", "02", 'Episode_name', 'avi'],
-    ['Series Name S01E03.Episode_name.avi', 'Series Name', '', '', "01", "03", 'Episode_name', 'avi'],
-    ['Series Name S01E04.Episode_name.avi', 'Series Name', '', '', "01", "04", 'Episode_name', 'avi'],
-    ['Series Name.S01E05.Episode_name.avi', 'Series Name', '', '', "01", "05", 'Episode_name', 'avi'],
+    ['Series Name.S01E01.EXTRA_META.avi', 'Series Name', '', '', "01", "01", 'EXTRA_META', 'avi'],
+    ['Series Name.S01E02.EXTRA_META.avi', 'Series Name', '', '', "01", "02", 'EXTRA_META', 'avi'],
+    ['Series Name S01E03.EXTRA_META.avi', 'Series Name', '', '', "01", "03", 'EXTRA_META', 'avi'],
+    ['Series Name S01E04.EXTRA_META.avi', 'Series Name', '', '', "01", "04", 'EXTRA_META', 'avi'],
+    ['Series Name.S01E05.EXTRA_META.avi', 'Series Name', '', '', "01", "05", 'EXTRA_META', 'avi'],
     ['Series Name.S01E06.avi', 'Series Name', '', '', "01", "06", '', 'avi'],
     ],
   },
   { # TV Show Support -   By Season and Episode
   test_bool_results => [ 1, 0, 0], # is_tv_show is_tv_subtitle is_multi_episode
-  test_keys => [qw(filename show_name country year season episode epname ext)],
+  test_keys => [qw(filename show_name country year season episode extra_meta ext)],
   season => 1,
   name => 'Shows by Season with year tests',
   test_files => [
-    ['Series Name 2018.S01E01.Episode_name.avi', 'Series Name', '', '2018', "01", "01", 'Episode_name', 'avi'],
-    ['Series Name.(2018).S01E02.Episode_name.avi', 'Series Name', '', '2018', "01", "02", 'Episode_name', 'avi'],
-    ['Series Name 1971 S01E03.Episode_name.avi', 'Series Name', '', '1971', "01", "03", 'Episode_name', 'avi'],
-    ['Series Name S01E04.Episode_name.avi', 'Series Name', '', '', "01", "04", 'Episode_name', 'avi'],
-    ['Series Name.S01E05.Episode_name.avi', 'Series Name', '', '', "01", "05", 'Episode_name', 'avi'],
+    ['Series Name 2018.S01E01.EXTRA_META.avi', 'Series Name', '', '2018', "01", "01", 'EXTRA_META', 'avi'],
+    ['Series Name.(2018).S01E02.EXTRA_META.avi', 'Series Name', '', '2018', "01", "02", 'EXTRA_META', 'avi'],
+    ['Series Name 1971 S01E03.EXTRA_META.avi', 'Series Name', '', '1971', "01", "03", 'EXTRA_META', 'avi'],
+    ['Series Name S01E04.EXTRA_META.avi', 'Series Name', '', '', "01", "04", 'EXTRA_META', 'avi'],
+    ['Series Name.S01E05.EXTRA_META.avi', 'Series Name', '', '', "01", "05", 'EXTRA_META', 'avi'],
     ['Series Name.S01E06.avi', 'Series Name', '', '', "01", "06", '', 'avi'],
     ],
   },
   { # TV Show Support -   By Date no Season or Episode
 
   test_bool_results => [1, 0, 0], # is_tv_show is_tv_subtitle is_multi_episode
-  test_keys => [qw(filename show_name year month date epname ext)],
+  test_keys => [qw(filename show_name year month date extra_meta ext)],
   name => 'Shows by Date',
   test_files => [
-    ['Series Name.2018.01.03.Episode_name.avi', 'Series Name', '2018', '01', '03', 'Episode_name', 'avi'],
-    ['Series Name 2018 02 03 Episode_name.avi', 'Series Name', '2018', '02', '03', 'Episode_name', 'avi'],
-    ['Series.Name.2018.03.03.Episode_name.avi', 'Series.Name', '2018', '03', '03', 'Episode_name', 'avi'],
+    ['Series Name.2018.01.03.EXTRA_META.avi', 'Series Name', '2018', '01', '03', 'EXTRA_META', 'avi'],
+    ['Series Name 2018 02 03 EXTRA_META.avi', 'Series Name', '2018', '02', '03', 'EXTRA_META', 'avi'],
+    ['Series.Name.2018.03.03.EXTRA_META.avi', 'Series.Name', '2018', '03', '03', 'EXTRA_META', 'avi'],
     ['Series Name 2018 04 03.avi', 'Series Name', '2018', '04', '03', '', 'avi'],
     ['Series.Name.2018.05.03.avi', 'Series.Name', '2018', '05', '03', '', 'avi'],
     ],
   },
   { # TV Show Support -   By Season and Episode Real Data
   test_bool_results => [ 1, 0, 0], # is_tv_show is_tv_subtitle is_multi_episode
-  test_keys => [qw(filename show_name country year season episode epname ext)],
+  test_keys => [qw(filename show_name country year season episode episode_name extra_meta ext)],
   season => 1,
   name => 'Shows by Season without year tests',
   test_files => [
-    ['life on mars - S01E01.avi', 'life on mars', '', '', "01", "01", '', 'avi'],
+    ['life on mars - S01E01.avi', 'life on mars', '', '', "01", "01", '', '', 'avi'],
+    ['Luther.S05E03.720p.AMZN.WEB-DL.DDP5.1.H.264-NTb[eztv].mkv', 'Luther', '', '', '05', '03', '', '720p.AMZN.WEB-DL.DDP5.1.H.264-NTb[eztv]', 'mkv'],
+    ['Luther.S05E03.Bogus.720p.AMZN.WEB-DL.DDP5.1.H.264-NTb[eztv].mkv', 'Luther', '', '', '05', '03', 'Bogus', 'Bogus.720p.AMZN.WEB-DL.DDP5.1.H.264-NTb[eztv]', 'mkv'],
     ],
   },
   { # TV Show Support -   By Season and Episode Real Data with Country
   test_bool_results => [ 1, 0, 0], # is_tv_show is_tv_subtitle is_multi_episode
-  test_keys => [qw(filename show_name country year season episode epname ext)],
+  test_keys => [qw(filename show_name country year season episode extra_meta ext)],
   season => 1,
   name => 'Shows by Season with country but without year tests',
   test_files => [
@@ -111,6 +113,7 @@ sub testVideoFilename {
           # Skip test if the key does not exit in Info obj
           next if (!defined $attr);
           if ($attr ne $value) {
+            print BLUE "{$keys->[$i]}: ";
             print RED "'$attr' ne '$value'\nFAILED: $file->{file}\n";
             print Dumper($file); exit;
             }

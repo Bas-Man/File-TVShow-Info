@@ -1,10 +1,10 @@
 package File::TVShow::Info;
 
-use 5.006;
+use 5.10.0;
 use strict;
 use warnings;
 
-use vars qw(@filePatterns);
+use vars qw(@filePatterns @episode_name_patterns);
 
 =head1 NAME
 
@@ -33,33 +33,34 @@ If the file name is parsed and can not be identified as a TV show then L</is_tv_
 
 =cut
 
+
 @filePatterns = (
         { # TV Show Support -   By Date no Season or Episode
           # Perl > v5.10
-          re => '(?<show_name>.*?)[.\s_-](?<year>\d{4})[.\s_-](?<month>\d{1,2})[.\s_-](?<date>\d{1,2})(?:[.\s_-](?<epname>.*)|)[.](?<ext>[a-z]{3})$',
+          re => '(?<show_name>.*?)[.\s_-](?<year>\d{4})[.\s_-](?<month>\d{1,2})[.\s_-](?<date>\d{1,2})(?:[.\s_-](?<extra_meta>.*)|)[.](?<ext>[a-z]{3})$',
 
           # Perl < v5.10
           re_compat => '(.*?)[.\s_-](\d{4})[.\s_-](\d{1,2})[.\s_-](\d{1,2})(?:[.\s_-](.*)|)[.](?<ext>[a-z]{3})$',
-          keys_compat => [qw(filename show_name year month date epname ext)],
+          keys_compat => [qw(filename show_name year month date extra_meta ext)],
         },
         { # TV Show Support - SssEee or Season_ss_Episode_ss
           # Perl > v5.10
-          re => '^(?:(?<show_name>.*?)[\/\s._-]+)?(?:s|se|season|series)[\s._-]?(?<season>\d{1,2})[x\/\s._-]*(?:e|ep|episode|[\/\s._-]+)[\s._-]?(?<episode>\d{1,2})(?:-?(?:(?:e|ep)[\s._]*)?(?<endep>\d{1,2}))?(?:[\s._]?(?:p|part)[\s._]?(?<part>\d+))?(?<subep>[a-z])?(?:[\/\s._-]*(?<epname>[^\/]+?))?[.](?<ext>[a-z]{3})$',
+          re => '^(?:(?<show_name>.*?)[\/\s._-]+)?(?:s|se|season|series)[\s._-]?(?<season>\d{1,2})[x\/\s._-]*(?:e|ep|episode|[\/\s._-]+)[\s._-]?(?<episode>\d{1,2})(?:-?(?:(?:e|ep)[\s._]*)?(?<endep>\d{1,2}))?(?:[\s._]?(?:p|part)[\s._]?(?<part>\d+))?(?<subep>[a-z])?(?:[\/\s._-]*(?<extra_meta>[^\/]+?))?[.](?<ext>[a-z]{3})$',
 
           # Perl < v5.10
           re_compat => '^(?:(.*?)[\/\s._-]+)?(?:s|se|season|series)[\s._-]?(\d{1,2})[x\/\s._-]*(?:e|ep|episode|[\/\s._-]+)[\s._-]?(\d{1,2})(?:-?(?:(?:e|ep)[\s._]*)?(\d{1,2}))?(?:[\s._]?(?:p|part)[\s._]?(\d+))?([a-z])?(?:[\/\s._-]*([^\/]+?))?[.](?<ext>[a-z]{3})$',
-          keys_compat => [qw(show_name season episode endep part subep epname)],
+          keys_compat => [qw(show_name season episode endep part subep extra_meta)],
         },
         { # TV Show Support - sxee
           # Perl > v5.10
-          re => '^(?:(?<show_name>.*?)[\/\s._-]*)?(?<openb>\[)?(?<season>\d{1,2})[x\/](?<episode>\d{1,2})(?:-(?:\k<season>x)?(?<endep>\d{1,2}))?(?(<openb>)\])(?:[\s._-]*(?<epname>[^\/]+?))?[.](?<ext>[a-z]{3})$',
+          re => '^(?:(?<show_name>.*?)[\/\s._-]*)?(?<openb>\[)?(?<season>\d{1,2})[x\/](?<episode>\d{1,2})(?:-(?:\k<season>x)?(?<endep>\d{1,2}))?(?(<openb>)\])(?:[\s._-]*(?<extra_meta>[^\/]+?))?[.](?<ext>[a-z]{3})$',
 
           # Perl < v5.10
           re_compat => '^(?:(.*?)[\/\s._-]*)?\[?(\d{1,2})[x\/](\d{1,2})(?:-(?:\d{1,2}x)?(\d{1,2}))?\]?(?:[\s._-]*([^\/]+?))?[.](?<ext>[a-z]{3})$',
-          keys_compat => [qw(show_name season episode endep epname)],
+          keys_compat => [qw(show_name season episode endep extra_meta)],
 
           test_funcs => [1, 1], # TV Episode
-          test_keys => [qw(filename show_name season episode endep epname ext)],
+          test_keys => [qw(filename show_name season episode endep extra_meta ext)],
           test_files => [
           ['Series Name.1x02.Episode_name.avi', 'Series Name', 1, 2, undef, 'Episode_name', 'avi'],
           ['Series Name 1x02.Episode_name.avi', 'Series Name', 1, 2, undef, 'Episode_name', 'avi'],
@@ -67,6 +68,18 @@ If the file name is parsed and can not be identified as a TV show then L</is_tv_
           ['Series Name.1x02-03.Episode_name.avi', 'Series Name', 1, 2, 3, 'Episode_name', 'avi'],
           ['Series Name.1x02-1x03.Episode_name.avi', 'Series Name', 1, 2, 3, 'Episode_name', 'avi'],
           ],
+        },
+);
+
+@episode_name_patterns = (
+        { # Matching name followed by resoltion (name.720p)
+          re => '^(?<episode_name>.*)[\s.]?(?:(?:\.|\ )[0-9]{3,4})(?:p|i)',
+        },
+        { # Matching name follwoed by source
+          re => '^(?<episode_name>.*)[\s.](AMZN|hdtv|SDTV)',
+        },
+        { # Matching name followed by web
+          re => '^(?<episode_name>.*)[\s.](web)',
         },
 );
 
@@ -100,6 +113,8 @@ Show season
 
 =item * episode:
 Show episode
+
+=item * episode_name
 
 =item * country
 
@@ -185,6 +200,7 @@ sub new {
     $self->_is_tv_subtitle();
     $self->_get_subtitle_lang();
     $self->_get_country();
+    $self->_get_episode_name();
     return $self;
 }
 
@@ -199,10 +215,6 @@ sub show_name {
     my $self = shift;
     my $attr = 'show_name';
     $self->__get_obj_attr($attr);
-
-    #return $self->{show_name} if defined $self->{show_name};
-    #return '';
-
 }
 
 =head2 original_show_name
@@ -235,8 +247,6 @@ sub season {
     my $self = shift;
     my $attr = 'season';
     $self->__get_obj_attr($attr);
-    #return $self->{season} if defined $self->{season};
-    #return '';
 }
 
 =head2 episode
@@ -250,10 +260,6 @@ sub episode {
     my $self = shift;
     my $attr = 'episode';
     $self->__get_obj_attr($attr);
-
-    #return $self->{episode} if defined $self->{episode};
-    #return '';
-
 }
 
 =head2 source
@@ -334,10 +340,6 @@ sub year {
     my $self = shift;
     my $attr = 'year';
     $self->__get_obj_attr($attr);
-
-    #return $self->{year} if defined $self->{year};
-    #return '';
-
 }
 
 =head2 month
@@ -351,10 +353,6 @@ sub month {
     my $self = shift;
     my $attr = 'month';
     $self->__get_obj_attr($attr);
-
-    #return $self->{month} if defined $self->{month};
-    #return '';
-
 }
 
 =head2 date
@@ -368,10 +366,6 @@ sub date {
     my $self = shift;
     my $attr = 'date';
     $self->__get_obj_attr($attr);
-
-    #return $self->{date} if defined $self->{date};
-    #return '';
-
 }
 
 =head2 ymd
@@ -401,9 +395,6 @@ sub resolution {
     my $self = shift;
     my $attr = 'resolution';
     $self->__get_obj_attr($attr);
-
-    #return $self->{resolution} if defined $self->{resolution};
-    #return '';
 }
 
 =head2 release_group
@@ -417,24 +408,19 @@ sub release_group {
     my $self = shift;
     my $attr = 'release_group';
     $self->__get_obj_attr($attr);
-
-    #return $self->{release_group} if defined $self->{release_group};
-    #return '';
 }
 
 =head2 episode_name (Under consideration, difficult to isolate and often ommited)
 
-Return episode_name. Return '' if {epname} is not defined.
+Return episode_name. Return '' if {extra_meta} is not defined.
 
 =cut
 
 sub episode_name {
 
     my $self = shift;
-
-    return $self->{epname} if defined $self->{epname};
-    return '';
-
+    my $attr = 'episode_name';
+    $self->__get_obj_attr($attr);
 }
 
 =head2 country
@@ -446,8 +432,8 @@ Retrun country found in {show_name}. Return '' if not defined
 sub country {
 
     my $self = shift;
-    return $self->{country} if defined $self->{country};
-    return '';
+    my $attr = 'country';
+    $self->__get_obj_attr($attr);
 }
 
 =head2 ext
@@ -528,10 +514,6 @@ sub subtitle_lang {
     my $self = shift;
     my $attr = 'subtitle_lang';
     $self->__get_obj_attr($attr);
-
-    #return $self->{subtitle_lang} if defined $self->{subtitle_lang};
-    #return '';
-
 }
 
 =head2 has_country
@@ -563,8 +545,8 @@ sub is_by_date {
     my $self = shift;
 
     if (defined $self->{year} && defined $self->{month} &&
-      defined $self->{date}) {
-        return 1;
+        defined $self->{date}) {
+      return 1;
     }
     return 0;
 }
@@ -581,18 +563,10 @@ sub is_by_season {
 
     my $self = shift;
     if (defined $self->{season} && defined $self->{episode}) {
-        return 1;
+      return 1;
     }
     return 0;
 }
-
-#=head1 Internal Methods
-
-#=head2 _isolate_name_year
-
-#This is an internal method called by new(). Your should B<NOT> call this yourself.
-
-#=cut
 
 sub _isolate_name_year {
 
@@ -627,18 +601,45 @@ sub _isolate_name_year {
 
 # TODO: Code _get_source (HTDV, AMZ ?)
 
-#=head2 _get_release_group
+sub _get_episode_name {
 
-#This is an internal method called by new(). You should B<NOT> call if yourself.
+    my $self = shift;
 
-#=cut
+    # This is not a tv show file. Exit method now.
+    return if !$self->is_tv_show() || !defined $self->{extra_meta};
+
+    # Dont bother search as there is no Episode Name extra_meta starts
+    # with 720p or AMZN or WEB
+    return if $self->{extra_meta} =~ /^([0-9]{3,4}(p|i)|AMZN|WEB)/i;
+
+    # Loop through possible regex list to find suiable regex to use
+    for my $pat (@episode_name_patterns) {
+        if ($self->{extra_meta} =~ /$pat->{re}/i) {
+          # We have a match we will exit after this loop
+          # Use this {re} as our regex
+          $self->{episode_name_regex} = $pat->{re};
+          # We have a match so we are skipping all other @filePatterns
+          last;
+        }
+    }
+    # Only do the extraction of we found a matching regex to use
+    if (defined $self->{episode_name_regex}) {
+      if ($self->{extra_meta} =~ /$self->{episode_name_regex}/i) {
+        $self->{episode_name} = $+{episode_name};
+      }
+    } else {
+      # This is only being set for use in testing.
+      # There might be an Episode name, but no regex match found
+      $self->{no_episode_name_regex} = 1;
+    }
+}
 
 sub _get_release_group {
 
     my $self = shift;
 
     # This is not a tv show file. Exit method now.
-    return if !$self->is_tv_show() || !defined $self->{epname};
+    return if !$self->is_tv_show() || !defined $self->{extra_meta};
 
     my $regex;
     if ($] >= 5.010000) { # Perl 5.10 > has regex group support
@@ -646,23 +647,17 @@ sub _get_release_group {
     } else { # Perl versions below 5.10 do not have group support
       $regex = '[\[]?(fov|vtv|ettv|rmteam|eztv)[]]?';
     }
-    if ($self->{epname} =~ /$regex/gi) {
+    if ($self->{extra_meta} =~ /$regex/gi) {
       $self->{release_group} = $+{release_group} || $1; # $1 equals group release_group
     }
 }
-
-#=head2 _get_resolution
-
-#This is an internal method called by new(). You should B<NOT> call it yourself.
-
-#=cut
 
 sub _get_resolution {
 
     my $self = shift;
 
     # This is not a tv show file. Exit method now.
-    return if !$self->is_tv_show() || !defined $self->{epname};
+    return if !$self->is_tv_show() || !defined $self->{extra_meta};
 
     my $regex;
     if ($] >= 5.010000) { # Perl 5.10 > has regex group support
@@ -670,7 +665,7 @@ sub _get_resolution {
     } else { # Perl versions below 5.10 do not have group support
       $regex = '([0-9]{3,4}[p|i])';
     }
-    if ($self->{epname} =~ /$regex/gi) {
+    if ($self->{extra_meta} =~ /$regex/gi) {
       $self->{resolution} = $+{resolution} || $1; # $1 equals group resolution
     }
 
@@ -698,14 +693,6 @@ sub _get_country {
   }
 }
 
-#=head2 _is_tv_subtitle
-
-#This is an internal method called by new(). You should B<NOT> call it yourself
-
-#This will determine if the file is a subtitle and define {is_subtitle}
-
-#=cut
-
 sub _is_tv_subtitle {
 
     my $self = shift;
@@ -721,15 +708,6 @@ sub _is_tv_subtitle {
     }
 }
 
-#=head2 _get_subtitle_lang
-
-#This is an internal method called by new(). You should B<NOT> call it yourself.
-
-#This will get the subtitles language from the file name if present. {subtitle_lang}.
-#Requires that {is_subtitle} is defined.
-
-#=cut
-
 sub _get_subtitle_lang {
 
     my $self = shift;
@@ -743,7 +721,7 @@ sub _get_subtitle_lang {
     } else { # Perl versions below 5.10 do not have group support
       $regex = '([a-z]{2,})$';
     }
-    if ($self->{epname} =~ /$regex/gi) {
+    if ($self->{extra_meta} =~ /$regex/gi) {
       $self->{subtitle_lang} = $+{lang} || $1; # $1 equals group lang
     }
 }
