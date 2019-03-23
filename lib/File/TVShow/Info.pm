@@ -114,6 +114,8 @@ Show season
 =item * episode:
 Show episode
 
+=item * episode_name
+
 =item * country
 
 =item * endep: (Naming under consideration)
@@ -213,10 +215,6 @@ sub show_name {
     my $self = shift;
     my $attr = 'show_name';
     $self->__get_obj_attr($attr);
-
-    #return $self->{show_name} if defined $self->{show_name};
-    #return '';
-
 }
 
 =head2 original_show_name
@@ -249,8 +247,6 @@ sub season {
     my $self = shift;
     my $attr = 'season';
     $self->__get_obj_attr($attr);
-    #return $self->{season} if defined $self->{season};
-    #return '';
 }
 
 =head2 episode
@@ -264,10 +260,6 @@ sub episode {
     my $self = shift;
     my $attr = 'episode';
     $self->__get_obj_attr($attr);
-
-    #return $self->{episode} if defined $self->{episode};
-    #return '';
-
 }
 
 =head2 source
@@ -348,10 +340,6 @@ sub year {
     my $self = shift;
     my $attr = 'year';
     $self->__get_obj_attr($attr);
-
-    #return $self->{year} if defined $self->{year};
-    #return '';
-
 }
 
 =head2 month
@@ -365,10 +353,6 @@ sub month {
     my $self = shift;
     my $attr = 'month';
     $self->__get_obj_attr($attr);
-
-    #return $self->{month} if defined $self->{month};
-    #return '';
-
 }
 
 =head2 date
@@ -382,10 +366,6 @@ sub date {
     my $self = shift;
     my $attr = 'date';
     $self->__get_obj_attr($attr);
-
-    #return $self->{date} if defined $self->{date};
-    #return '';
-
 }
 
 =head2 ymd
@@ -415,9 +395,6 @@ sub resolution {
     my $self = shift;
     my $attr = 'resolution';
     $self->__get_obj_attr($attr);
-
-    #return $self->{resolution} if defined $self->{resolution};
-    #return '';
 }
 
 =head2 release_group
@@ -431,9 +408,6 @@ sub release_group {
     my $self = shift;
     my $attr = 'release_group';
     $self->__get_obj_attr($attr);
-
-    #return $self->{release_group} if defined $self->{release_group};
-    #return '';
 }
 
 =head2 episode_name (Under consideration, difficult to isolate and often ommited)
@@ -445,10 +419,8 @@ Return episode_name. Return '' if {extra_meta} is not defined.
 sub episode_name {
 
     my $self = shift;
-
-    return $self->{episode_name} if defined $self->{episode_name};
-    return '';
-
+    my $attr = 'episode_name';
+    $self->__get_obj_attr($attr);
 }
 
 =head2 country
@@ -460,8 +432,8 @@ Retrun country found in {show_name}. Return '' if not defined
 sub country {
 
     my $self = shift;
-    return $self->{country} if defined $self->{country};
-    return '';
+    my $attr = 'country';
+    $self->__get_obj_attr($attr);
 }
 
 =head2 ext
@@ -542,10 +514,6 @@ sub subtitle_lang {
     my $self = shift;
     my $attr = 'subtitle_lang';
     $self->__get_obj_attr($attr);
-
-    #return $self->{subtitle_lang} if defined $self->{subtitle_lang};
-    #return '';
-
 }
 
 =head2 has_country
@@ -577,8 +545,8 @@ sub is_by_date {
     my $self = shift;
 
     if (defined $self->{year} && defined $self->{month} &&
-      defined $self->{date}) {
-        return 1;
+        defined $self->{date}) {
+      return 1;
     }
     return 0;
 }
@@ -595,7 +563,7 @@ sub is_by_season {
 
     my $self = shift;
     if (defined $self->{season} && defined $self->{episode}) {
-        return 1;
+      return 1;
     }
     return 0;
 }
