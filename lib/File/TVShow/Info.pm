@@ -648,6 +648,11 @@ sub _get_episode_name {
     # This is not a tv show file. Exit method now.
     return if !$self->is_tv_show() || !defined $self->{extra_meta};
 
+    # Dont bother search as there is no Episode Name extra_meta starts
+    # with 720p or AMZN or WEB
+    return if $self->{extra_meta} =~ /^([0-9]{3,4}(p|i)|AMZN|WEB)/i;
+
+    # Loop through possible regex list to find suiable regex to use
     for my $pat (@episode_name_patterns) {
         if ($self->{extra_meta} =~ /$pat->{re}/i) {
           # We have a match we will exit after this loop
@@ -662,6 +667,10 @@ sub _get_episode_name {
       if ($self->{extra_meta} =~ /$self->{episode_name_regex}/i) {
         $self->{episode_name} = $+{episode_name};
       }
+    } else {
+      # This is only being set for use in testing.
+      # There might be an Episode name, but no regex match found
+      $self->{no_episode_name_regex} = 1;
     }
 }
 

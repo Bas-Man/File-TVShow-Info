@@ -80,8 +80,12 @@ subtest "test.S01E02E03.Pilot.720p.avi" => sub {
   is($obj->season_episode(), "S01E02E03", "season_episode returns SO1EO2E03");
   can_ok($obj, 'episode_name');
   is($obj->episode_name(), "Pilot", "Episode Name: Pilot");
-  print Data::Dumper::Dumper($obj);
 };
 
+subtest "Luther.S05E03.720p.AMZN.WEB-DL.DDP5.1.H.264-NTb[eztv].mkv" => sub {
+  my $obj = File::TVShow::Info->new("Luther.S05E03.720p.AMZN.WEB-DL.DDP5.1.H.264-NTb[eztv].mkv");
+  is($obj->episode_name(), "", "Episode Name: ");
+  print Data::Dumper::Dumper($obj);
+};
 
 done_testing();
