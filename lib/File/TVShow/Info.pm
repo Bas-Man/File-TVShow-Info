@@ -659,7 +659,7 @@ sub _get_episode_name {
     }
     # Only do the extraction of we found a matching regex to use
     if (defined $self->{episode_name_regex}) {
-      if ($self->{extra_meta} =~ /$self->{episode_name_regex}/gi) {
+      if ($self->{extra_meta} =~ /$self->{episode_name_regex}/i) {
         $self->{episode_name} = $+{episode_name};
       }
     }

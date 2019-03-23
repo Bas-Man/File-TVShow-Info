@@ -57,4 +57,27 @@ subtest "The.4400.S01E02.avi" => sub {
   is($obj->{year}, undef, "year is not defined");
 };
 
+subtest "S.W.A.T.2017.S01E15.Crews.720p.AMZN.WEBRip.DDP5.1.x264-NTb[eztv].mkv" => sub {
+  my $obj = File::TVShow::Info->new("S.W.A.T.2017.S01E15.Crews.720p.AMZN.WEBRip.DDP5.1.x264-NTb[eztv].mkv");
+  is($obj->{show_name}, "S.W.A.T");
+  is($obj->{year}, "2017");
+  is($obj->{episode_name}, "Crews");
+  print Data::Dumper::Dumper($obj);
+};
+
+subtest "S.W.A.T.2017.S01E15.Crews.AMZN.WEBRip.DDP5.1.x264-NTb[eztv].mkv" => sub {
+  my $obj = File::TVShow::Info->new("S.W.A.T.2017.S01E15.Crews.AMZN.WEBRip.DDP5.1.x264-NTb[eztv].mkv");
+  is($obj->{show_name}, "S.W.A.T");
+  is($obj->{year}, "2017");
+  is($obj->{episode_name}, "Crews");
+  print Data::Dumper::Dumper($obj);
+};
+
+subtest "S.W.A.T.2017.S01E15.Crews.WEBRip.DDP5.1.x264-NTb[eztv].mkv" => sub {
+  my $obj = File::TVShow::Info->new("S.W.A.T.2017.S01E15.Crews.WEBRip.DDP5.1.x264-NTb[eztv].mkv");
+  is($obj->{show_name}, "S.W.A.T");
+  is($obj->{year}, "2017");
+  is($obj->{episode_name}, "Crews");
+  print Data::Dumper::Dumper($obj);
+};
 done_testing();
