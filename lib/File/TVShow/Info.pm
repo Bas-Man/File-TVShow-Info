@@ -410,9 +410,12 @@ sub release_group {
     $self->__get_obj_attr($attr);
 }
 
-=head2 episode_name (Under consideration, difficult to isolate and often ommited)
+=head2 episode_name
 
-Return episode_name. Return '' if {extra_meta} is not defined.
+Return episode_name. Return '' if {extra_meta} is not defined or can not
+determine episode name.
+
+Note: episode name MUST directly follow SXXEXX or it can not be found.
 
 =cut
 
