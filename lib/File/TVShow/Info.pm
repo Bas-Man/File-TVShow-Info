@@ -194,6 +194,7 @@ sub new {
         }
       }
     }
+    $self->_set_tvshow_organize_name();
     $self->_isolate_name_year();
     $self->_get_resolution();
     $self->_get_release_group();
@@ -569,6 +570,16 @@ sub is_by_season {
       return 1;
     }
     return 0;
+}
+
+sub _set_tvshow_organize_name {
+
+    my $self = shift;
+
+    # This is not a tv show file. Exit method now.
+    return if !$self->is_tv_show();
+
+    $self->{organize_name} = $self->{show_name} if defined $self->{show_name};
 }
 
 sub _isolate_name_year {
