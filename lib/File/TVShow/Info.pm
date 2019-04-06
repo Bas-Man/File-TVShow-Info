@@ -37,26 +37,26 @@ If the file name is parsed and can not be identified as a TV show then L</is_tv_
 @filePatterns = (
         { # TV Show Support -   By Date no Season or Episode
           # Perl > v5.10
-          re => '(?<show_name>.*?)[.\s_-](?<year>\d{4})[.\s_-](?<month>\d{1,2})[.\s_-](?<date>\d{1,2})(?:[.\s_-](?<extra_meta>.*)|)[.](?<ext>[a-z]{3})$',
+          re => '(?<show_name>.*?)[.\s_-](?<year>\d{4})[.\s_-](?<month>\d{1,2})[.\s_-](?<date>\d{1,2})(?:[.\s_-](?<extra_meta>.*)|)[.](?<ext>(?:[a-z]{3}|[a-z]{2}[0-9]))$',
 
           # Perl < v5.10
-          re_compat => '(.*?)[.\s_-](\d{4})[.\s_-](\d{1,2})[.\s_-](\d{1,2})(?:[.\s_-](.*)|)[.](?<ext>[a-z]{3})$',
+          re_compat => '(.*?)[.\s_-](\d{4})[.\s_-](\d{1,2})[.\s_-](\d{1,2})(?:[.\s_-](.*)|)[.]((?:[a-z]{3}|[a-z]{2}[0-9]))$',
           keys_compat => [qw(filename show_name year month date extra_meta ext)],
         },
         { # TV Show Support - SssEee or Season_ss_Episode_ss
           # Perl > v5.10
-          re => '^(?:(?<show_name>.*?)[\/\s._-]+)?(?:s|se|season|series)[\s._-]?(?<season>\d{1,2})[x\/\s._-]*(?:e|ep|episode|[\/\s._-]+)[\s._-]?(?<episode>\d{1,2})(?:-?(?:(?:e|ep)[\s._]*)?(?<endep>\d{1,2}))?(?:[\s._]?(?:p|part)[\s._]?(?<part>\d+))?(?<subep>[a-z])?(?:[\/\s._-]*(?<extra_meta>[^\/]+?))?[.](?<ext>[a-z]{3})$',
+          re => '^(?:(?<show_name>.*?)[\/\s._-]+)?(?:s|se|season|series)[\s._-]?(?<season>\d{1,2})[x\/\s._-]*(?:e|ep|episode|[\/\s._-]+)[\s._-]?(?<episode>\d{1,2})(?:-?(?:(?:e|ep)[\s._]*)?(?<endep>\d{1,2}))?(?:[\s._]?(?:p|part)[\s._]?(?<part>\d+))?(?<subep>[a-z])?(?:[\/\s._-]*(?<extra_meta>[^\/]+?))?[.](?<ext>(?:[a-z]{3}|[a-z]{2}[0-9]))$',
 
           # Perl < v5.10
-          re_compat => '^(?:(.*?)[\/\s._-]+)?(?:s|se|season|series)[\s._-]?(\d{1,2})[x\/\s._-]*(?:e|ep|episode|[\/\s._-]+)[\s._-]?(\d{1,2})(?:-?(?:(?:e|ep)[\s._]*)?(\d{1,2}))?(?:[\s._]?(?:p|part)[\s._]?(\d+))?([a-z])?(?:[\/\s._-]*([^\/]+?))?[.](?<ext>[a-z]{3})$',
+          re_compat => '^(?:(.*?)[\/\s._-]+)?(?:s|se|season|series)[\s._-]?(\d{1,2})[x\/\s._-]*(?:e|ep|episode|[\/\s._-]+)[\s._-]?(\d{1,2})(?:-?(?:(?:e|ep)[\s._]*)?(\d{1,2}))?(?:[\s._]?(?:p|part)[\s._]?(\d+))?([a-z])?(?:[\/\s._-]*([^\/]+?))?[.](?<ext>(?:[a-z]{3}|[a-z]{2}[0-9]))$',
           keys_compat => [qw(show_name season episode endep part subep extra_meta)],
         },
         { # TV Show Support - sxee
           # Perl > v5.10
-          re => '^(?:(?<show_name>.*?)[\/\s._-]*)?(?<openb>\[)?(?<season>\d{1,2})[x\/](?<episode>\d{1,2})(?:-(?:\k<season>x)?(?<endep>\d{1,2}))?(?(<openb>)\])(?:[\s._-]*(?<extra_meta>[^\/]+?))?[.](?<ext>[a-z]{3})$',
+          re => '^(?:(?<show_name>.*?)[\/\s._-]*)?(?<openb>\[)?(?<season>\d{1,2})[x\/](?<episode>\d{1,2})(?:-(?:\k<season>x)?(?<endep>\d{1,2}))?(?(<openb>)\])(?:[\s._-]*(?<extra_meta>[^\/]+?))?[.](?<ext>(?:[a-z]{3}|[a-z]{2}[0-9]))$',
 
           # Perl < v5.10
-          re_compat => '^(?:(.*?)[\/\s._-]*)?\[?(\d{1,2})[x\/](\d{1,2})(?:-(?:\d{1,2}x)?(\d{1,2}))?\]?(?:[\s._-]*([^\/]+?))?[.](?<ext>[a-z]{3})$',
+          re_compat => '^(?:(.*?)[\/\s._-]*)?\[?(\d{1,2})[x\/](\d{1,2})(?:-(?:\d{1,2}x)?(\d{1,2}))?\]?(?:[\s._-]*([^\/]+?))?[.](?<ext>(?:[a-z]{3}|[a-z]{2}[0-9]))$',
           keys_compat => [qw(show_name season episode endep extra_meta)],
 
           test_funcs => [1, 1], # TV Episode
