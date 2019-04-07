@@ -11,6 +11,7 @@ _build/
 cover_db/
 blib/
 inc/
+/t/pod.t
 .lwpcookies
 .last_cover_stats
 nytprof.out

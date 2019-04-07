@@ -1,16 +1,16 @@
-use 5.006;
+use 5.10.0;
 use strict;
 use warnings;
 use ExtUtils::MakeMaker;
 
 WriteMakefile(
-    NAME             => 'File::TVShow::Parse',
+    NAME             => 'File::TVShow::Info',
     AUTHOR           => q{Adam Spann <baspann@gmail.com>},
-    VERSION_FROM     => 'lib/File/TVShow/Parse.pm',
-    ABSTRACT_FROM    => 'lib/File/TVShow/Parse.pm',
+    VERSION_FROM     => 'lib/File/TVShow/Info.pm',
+    ABSTRACT_FROM    => 'lib/File/TVShow/Info.pm',
     LICENSE          => 'perl_5',
     PL_FILES         => {},
-    MIN_PERL_VERSION => '5.006',
+    MIN_PERL_VERSION => '5.10.0',
     CONFIGURE_REQUIRES => {
         'ExtUtils::MakeMaker' => '0',
     },
@@ -22,5 +22,5 @@ WriteMakefile(
         #'Foo::Bar::Module' => '5.0401',
     },
     dist  => { COMPRESS => 'gzip -9f', SUFFIX => 'gz', },
-    clean => { FILES => 'File-TVShow-Parse-*' },
+    clean => { FILES => 'File-TVShow-Info-*' },
 );
