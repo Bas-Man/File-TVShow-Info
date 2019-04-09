@@ -1,13 +1,15 @@
 File-TVShow-Info
 
-This module is a reworking of Video::Filename. This module will work with TV
-Shows only and does not support identifying movies.
+The README is used to introduce the module and provide instructions on
+how to install the module, any machine dependencies it may have (for
+example C compilers and installed libraries) and any other information
+that should be provided before the module is installed.
 
-It has enhanced support for identifying Episode names and other attributes.
-
-Note: Unlike Video::Filename Season and Episode are stored as strings. If you
-need these values as integers, please call the the str_to_int functions or
-manually cast the output.
+A README file is required for CPAN modules since CPAN extracts the README
+file from a module distribution so that people browsing the archive
+can use it to get an idea of the module's uses. It is usually a good idea
+to provide version information here so that people can decide whether
+fixes for the module are worth downloading.
 
 
 INSTALLATION
