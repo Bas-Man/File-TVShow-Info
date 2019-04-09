@@ -218,6 +218,24 @@ sub show_name {
     $self->__get_obj_attr($attr);
 }
 
+=head2 strip_show_name
+
+Return show_name after removing string delimiters
+
+=cut
+
+sub strip_show_name {
+
+    my $self = shift;
+
+    return if !$self->is_tv_show();
+
+    return $self->{show_name} if defined $self->{do_not_strip};
+    (my $newString = $self->{show_name}) =~ s/[\._-]/ /g;
+    return $newString;
+
+}
+
 =head2 original_show_name
 
 Return the original show name.
@@ -626,7 +644,10 @@ sub _isolate_name_year {
     # Skip isolation if {show_name} is in the array @exceptions
     # We do not want to modify the file name.
     foreach (@exceptions) {
-      return if $self->{show_name} =~ m/$_/;
+      if ($self->{show_name} =~ m/$_/) {
+        $self->{do_not_strip} = 1;
+        return;
+      }
     }
 
     # break {show_name} from year
