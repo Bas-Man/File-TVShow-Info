@@ -29,5 +29,9 @@ subtest "Life.on-Mars.S00E01.So-Far.720p.HULU.WEB-DL.DDP5.1.H.264-NTb[eztv].mkv"
   is($obj->network(), 'HULU', "Network: HULU");
 };
 
+subtest "Life.on-Mars.S00E01.So-Far.720p.HUlu.WEB-DL.DDP5.1.H.264-NTb[eztv].mkv" => sub {
+  my $obj = File::TVShow::Info->new("Life.on-Mars.S00E01.So-Far.720p.HUlu.WEB-DL.DDP5.1.H.264-NTb[eztv].mkv");
+  is($obj->network(), 'HUlu', "Network: HUlu");
+};
 
 done_testing();
