@@ -7,12 +7,9 @@ use Data::Dumper;
 
 unless ( $ENV{DEV_TESTING} ) {
     plan( skip_all => "Author tests not required for installation" );
+} else {
+  use File::TVShow::Info;
 }
-
-BEGIN {
-    use_ok( 'File::TVShow::Info' ) || print "Bail out!\n";
-}
-
 
 subtest "test.S01E01.avi" => sub {
   my $obj = File::TVShow::Info->new("test.S01E01.avi");

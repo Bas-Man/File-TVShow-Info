@@ -3,14 +3,7 @@ use 5.006;
 use strict;
 use warnings;
 use Test::More;
-
-unless ( $ENV{DEV_TESTING} ) {
-    plan( skip_all => "Author tests not required for installation" );
-}
-
-BEGIN {
-    use_ok( 'File::TVShow::Info' ) || print "Bail out!\n";
-}
+use File::TVShow::Info;
 
 use vars qw(@filePatterns @test_data);
 use Term::ANSIColor qw(:constants);
