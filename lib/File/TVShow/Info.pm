@@ -197,6 +197,7 @@ sub new {
     $self->_set_tvshow_organize_name();
     $self->_isolate_name_year();
     $self->_get_resolution();
+    $self->_get_network();
     $self->_get_release_group();
     $self->_is_tv_subtitle();
     $self->_get_subtitle_lang();
@@ -440,6 +441,23 @@ sub resolution {
     my $self = shift;
     my $attr = 'resolution';
     $self->__get_obj_attr($attr);
+}
+
+=head2 network
+
+Return network if found '' if not defined.
+
+Networks: AMZN, HULU, ABC and so on.
+
+=cut
+
+sub network {
+
+  my $self = shift;
+  my $attr = 'network';
+  $self->__get_obj_attr($attr);
+
+
 }
 
 =head2 release_group
@@ -727,6 +745,18 @@ sub _get_release_group {
     }
     if ($self->{extra_meta} =~ /$regex/gi) {
       $self->{release_group} = $+{release_group} || $1; # $1 equals group release_group
+    }
+}
+
+sub _get_network {
+
+    my $self = shift;
+
+    return if !$self->is_tv_show() || !defined $self->{extra_meta};
+
+    my $regex = '(?P<network>AMZN|ABC|HULU)';
+    if ($self->{extra_meta} =~ /$regex/gi) {
+      $self->{network} = $+{network};
     }
 }
 
