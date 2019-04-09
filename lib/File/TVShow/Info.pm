@@ -250,6 +250,19 @@ sub season {
     $self->__get_obj_attr($attr);
 }
 
+=head2 season_to_int
+
+Return season as an integer
+
+=cut
+
+sub season_to_int {
+
+    my $self = shift;
+    return int($self->season()) if defined $self->{season};
+    return undef;
+}
+
 =head2 episode
 
 Return the episode found in the file name. Return '' if {episode} is not defined.
@@ -261,6 +274,19 @@ sub episode {
     my $self = shift;
     my $attr = 'episode';
     $self->__get_obj_attr($attr);
+}
+
+=head2 episode_to_int
+
+Return episode as an integer
+
+=cut
+
+sub episode_to_int {
+
+    my $self = shift;
+    return int($self->episode()) if defined $self->{episode};
+    return undef;
 }
 
 =head2 source
