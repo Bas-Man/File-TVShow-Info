@@ -361,7 +361,7 @@ sub season_episode {
 
 =head2 has_year
 
-Returns 1 if year is defined else return 0
+Return 1 if year is defined else return 0
 
 =cut
 
@@ -473,7 +473,7 @@ sub episode_name {
 
 =head2 country
 
-Retrun country found in {show_name}. Return '' if not defined
+Return country found in {show_name}. Return '' if not defined
 
 =cut
 
@@ -521,7 +521,7 @@ sub is_tv_show {
 
 =head2 is_tv_subtitle
 
-Returns 1 if the file is a subtitle file, 0 if {is_subtitle} is not defined.
+Return 1 if the file is a subtitle file, 0 if {is_subtitle} is not defined.
 
 The file must also return true for is_tv_show() or the result is 0
 
@@ -553,7 +553,7 @@ sub has_subtitle_lang {
 
 =head2 subtitle_lang
 
-Returns the language of the subtitle file: eng or en. Return '' if {subtitle_lang} is not defined.
+Return the language of the subtitle file: eng or en. Return '' if {subtitle_lang} is not defined.
 
 =cut
 
