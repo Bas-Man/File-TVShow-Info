@@ -754,7 +754,7 @@ sub _get_network {
 
     return if !$self->is_tv_show() || !defined $self->{extra_meta};
 
-    my $regex = '(?P<network>AMZN|ABC|HULU)';
+    my $regex = '(?P<network>ABC|AMZN|BBC|CBS|CC|CW|DCU|DSNY|FBWatch|FREE|FOX|HULU|iP|LIFE|MTV|NBC|NICK|FC|RED|TF1|STZ)';
     if ($self->{extra_meta} =~ /$regex/gi) {
       $self->{network} = $+{network};
     }
