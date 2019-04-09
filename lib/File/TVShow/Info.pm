@@ -471,6 +471,23 @@ sub episode_name {
     $self->__get_obj_attr($attr);
 }
 
+=head2 strip_episode_name
+
+Return episode name without delimiters.
+
+=cut
+
+sub strip_episode_name {
+
+    my $self = shift;
+
+    return if !$self->is_tv_show();
+
+    (my $newString = $self->{episode_name}) =~ s/[\._-]/ /g;
+    return $newString;
+
+}
+
 =head2 country
 
 Return country found in {show_name}. Return '' if not defined
