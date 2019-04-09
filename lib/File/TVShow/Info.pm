@@ -4,7 +4,7 @@ use 5.10.0;
 use strict;
 use warnings;
 
-use vars qw(@filePatterns @episode_name_patterns);
+use vars qw(@filePatterns @episode_name_patterns @networks);
 
 =head1 NAME
 
@@ -82,6 +82,8 @@ If the file name is parsed and can not be identified as a TV show then L</is_tv_
           re => '^(?<episode_name>.*)[\s.](web)',
         },
 );
+
+@networks = qw ( ABC AMZN BBC CBS CC CW DCU DSNY FBWatch FREE FOX HULU iP LIFE MTV NBC NICK FC RED TF1 STZ );
 
 =head1 Methods
 
@@ -754,7 +756,11 @@ sub _get_network {
 
     return if !$self->is_tv_show() || !defined $self->{extra_meta};
 
-    my $regex = '(?P<network>ABC|AMZN|BBC|CBS|CC|CW|DCU|DSNY|FBWatch|FREE|FOX|HULU|iP|LIFE|MTV|NBC|NICK|FC|RED|TF1|STZ)';
+    #Build REGEX from array of Networks
+    my $regex = '(?P<network>';
+    $regex .= join('|', @networks);
+    $regex .= ')';
+    #my $regex = '(?P<network>ABC|AMZN|BBC|CBS|CC|CW|DCU|DSNY|FBWatch|FREE|FOX|HULU|iP|LIFE|MTV|NBC|NICK|FC|RED|TF1|STZ)';
     if ($self->{extra_meta} =~ /$regex/gi) {
       $self->{network} = $+{network};
     }
