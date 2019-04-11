@@ -3,9 +3,10 @@ package File::TVShow::Info;
 use 5.10.0;
 use strict;
 use warnings;
+use File::TVShow::EpisodeName qw (@episode_name_patterns);
 use File::TVShow::Networks qw(@networks);
 
-use vars qw(@filePatterns @episode_name_patterns );
+use vars qw(@filePatterns);
 
 =head1 NAME
 
@@ -59,18 +60,6 @@ If the file name is parsed and can not be identified as a TV show then L</is_tv_
           # Perl < v5.10
           re_compat => '^(?:(.*?)[\/\s._-]*)?\[?(\d{1,2})[x\/](\d{1,2})(?:-(?:\d{1,2}x)?(\d{1,2}))?\]?(?:[\s._-]*([^\/]+?))?[.](?<ext>(?:[a-z]{3}|[a-z]{2}[0-9]))$',
           keys_compat => [qw(show_name season episode endep extra_meta)],
-        },
-);
-
-@episode_name_patterns = (
-        { # Matching name followed by resoltion (name.720p)
-          re => '^(?<episode_name>.*)[\s.]?(?:(?:\.|\ )[0-9]{3,4})(?:p|i)',
-        },
-        { # Matching name follwoed by source
-          re => '^(?<episode_name>.*)[\s.](AMZN|hdtv|SDTV)',
-        },
-        { # Matching name followed by web
-          re => '^(?<episode_name>.*)[\s.](web)',
         },
 );
 
