@@ -16,4 +16,8 @@ our @episode_name_patterns = (
         },
 );
 
+=head1  This is merely a data file.
+
+=cut
+
 1;
