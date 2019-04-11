@@ -58,16 +58,6 @@ If the file name is parsed and can not be identified as a TV show then L</is_tv_
           # Perl < v5.10
           re_compat => '^(?:(.*?)[\/\s._-]*)?\[?(\d{1,2})[x\/](\d{1,2})(?:-(?:\d{1,2}x)?(\d{1,2}))?\]?(?:[\s._-]*([^\/]+?))?[.](?<ext>(?:[a-z]{3}|[a-z]{2}[0-9]))$',
           keys_compat => [qw(show_name season episode endep extra_meta)],
-
-          test_funcs => [1, 1], # TV Episode
-          test_keys => [qw(filename show_name season episode endep extra_meta ext)],
-          test_files => [
-          ['Series Name.1x02.Episode_name.avi', 'Series Name', 1, 2, undef, 'Episode_name', 'avi'],
-          ['Series Name 1x02.Episode_name.avi', 'Series Name', 1, 2, undef, 'Episode_name', 'avi'],
-          ['Series Name.[1x02].Episode_name.avi', 'Series Name', 1, 2, undef, 'Episode_name', 'avi'],
-          ['Series Name.1x02-03.Episode_name.avi', 'Series Name', 1, 2, 3, 'Episode_name', 'avi'],
-          ['Series Name.1x02-1x03.Episode_name.avi', 'Series Name', 1, 2, 3, 'Episode_name', 'avi'],
-          ],
         },
 );
 
