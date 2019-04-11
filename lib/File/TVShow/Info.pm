@@ -3,8 +3,9 @@ package File::TVShow::Info;
 use 5.10.0;
 use strict;
 use warnings;
+use File::TVShow::Networks qw(@networks);
 
-use vars qw(@filePatterns @episode_name_patterns @networks);
+use vars qw(@filePatterns @episode_name_patterns );
 
 =head1 NAME
 
@@ -72,8 +73,6 @@ If the file name is parsed and can not be identified as a TV show then L</is_tv_
           re => '^(?<episode_name>.*)[\s.](web)',
         },
 );
-
-@networks = qw ( ABC AMZN BBC CBS CC CW DCU DSNY FBWatch FREE FOX HULU iP LIFE MTV NBC NICK FC RED TF1 STZ );
 
 =head1 Methods
 
