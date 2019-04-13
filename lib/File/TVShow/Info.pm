@@ -218,6 +218,28 @@ sub strip_show_name {
 
 }
 
+=head2 clean_show_name
+
+Return complete show name with year and country in brackets if they exist.
+Also remove any delimiters, replaced with spaces
+
+=cut
+
+sub clean_show_name {
+
+    my $self = shift;
+
+    return if !$self->is_tv_show();
+
+    my $newString = $self->strip_show_name();
+    if ($self->has_year()) {
+      $newString .= ' (' . $self->year() . ')';
+    } elsif ($self->has_country()) {
+      $newString .= ' (' . $self->country() . ')';
+    }
+    return $newString;
+}
+
 =head2 original_show_name
 
 Return the original show name.
@@ -782,6 +804,8 @@ sub _get_country {
     # country strings. If not, we do not set {country}
     if (grep { $_ eq $1 } @{$self->{valid_countries}}) {
       $self->{country} = $+{country} || $1; # $1 equals group country
+      $self->{show_name} =~ s/\(?$1\)?//;
+      chop($self->{show_name});
     }
   }
 }
