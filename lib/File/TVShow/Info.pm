@@ -124,6 +124,7 @@ Show resolution 480p/720p and so on. This will be '' if not found.
 File extension
 
 =back
+
 =cut
 
 sub new {
@@ -829,7 +830,7 @@ sub __get_obj_attr {
 
 =head1 AUTHOR
 
-Adam Spann, C<< <baspann at gmail.com> >>
+Adam Spann, C<< <bans at cpan.org> >>
 
 =head1 BUGS
 
