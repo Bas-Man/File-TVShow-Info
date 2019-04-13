@@ -423,15 +423,15 @@ sub resolution {
     $self->__get_obj_attr($attr);
 }
 
-=head2 network
+#=head2 network
 
-Return network if found '' if not defined.
+#Return network if found '' if not defined.
 
-Networks: AMZN, HULU, ABC and so on.
+#Networks: AMZN, HULU, ABC and so on.
 
-=cut
+#=cut
 
-sub network {
+sub _network {
 
   my $self = shift;
   my $attr = 'network';
