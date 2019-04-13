@@ -4,10 +4,16 @@ require Exporter;
 our @ISA = qw ( Exporter );
 our @EXPORT = qw ( @networks );
 
-our @networks = qw ( ABC AMZN BBC CBS CC CW DCU DSNY FBWatch FREE FOX HULU iP LIFE MTV NBC NICK FC RED TF1 STZ );
+=head1 NAME
 
-=head1  This is merely a data file.
+File::TVShow::Networks - Array of Networks.
+
+=head1 VERSION
+
+Version 0.01
 
 =cut
+
+our @networks = qw ( ABC AMZN BBC CBS CC CW DCU DSNY FBWatch FREE FOX HULU iP LIFE MTV NBC NICK FC RED TF1 STZ );
 
 1;

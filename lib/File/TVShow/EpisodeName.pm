@@ -4,6 +4,18 @@ require Exporter;
 our @ISA = qw ( Exporter );
 our @EXPORT = qw ( @episode_name_patterns );
 
+=head1 NAME
+
+File::TVShow::EpisodeName - Array of EpisodeName matching regexs.
+
+=head1 VERSION
+
+Version 0.01
+
+=cut
+
+our $VERSION = '0.01';
+
 our @episode_name_patterns = (
         { # Matching name followed by resoltion (name.720p)
           re => '^(?<episode_name>.*)[\s.]?(?:(?:\.|\ )[0-9]{3,4})(?:p|i)',
@@ -15,9 +27,5 @@ our @episode_name_patterns = (
           re => '^(?<episode_name>.*)[\s.](web)',
         },
 );
-
-=head1  This is merely a data file.
-
-=cut
 
 1;
