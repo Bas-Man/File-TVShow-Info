@@ -14,6 +14,8 @@ Version 0.01
 
 =cut
 
+our $VERSION = '0.01';
+
 our @networks = qw ( ABC AMZN BBC CBS CC CW DCU DSNY FBWatch FREE FOX HULU iP LIFE MTV NBC NICK FC RED TF1 STZ );
 
 1;

@@ -3,8 +3,8 @@ package File::TVShow::Info;
 use 5.10.0;
 use strict;
 use warnings;
-use File::TVShow::EpisodeName qw (@episode_name_patterns);
-use File::TVShow::Networks qw(@networks);
+use File::TVShow::EpisodeName 0.01 qw (@episode_name_patterns);
+use File::TVShow::Networks 0.01 qw(@networks);
 
 use vars qw(@filePatterns);
 
