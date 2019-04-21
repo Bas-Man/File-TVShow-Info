@@ -15,13 +15,11 @@ WriteMakefile(
         'ExtUtils::MakeMaker' => '0',
     },
     BUILD_REQUIRES => {
-        'File::TVShow::Networks' => '0',
-        'File::TVShow::EpisodeName' => '0',
-        'Test::More' => '0',
     },
     PREREQ_PM => {
-      'File::TVShow::Networks' => '0',
-      'File::TVShow::EpisodeName' => '0',
+    },
+    TEST_REQUIRES => {
+      'Test::More' => '0',
     },
     dist  => { COMPRESS => 'gzip -9f', SUFFIX => 'gz', },
     clean => { FILES => 'File-TVShow-Info-*' },
