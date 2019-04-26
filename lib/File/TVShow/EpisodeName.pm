@@ -1,5 +1,7 @@
 package File::TVShow::EpisodeName;
 
+use 5.10.0;
+
 require Exporter;
 our @ISA = qw ( Exporter );
 our @EXPORT = qw ( @episode_name_patterns );

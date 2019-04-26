@@ -1,5 +1,7 @@
 package File::TVShow::Networks;
 
+use 5.10.0;
+
 require Exporter;
 our @ISA = qw ( Exporter );
 our @EXPORT = qw ( @networks );
