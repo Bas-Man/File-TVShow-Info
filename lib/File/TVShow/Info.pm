@@ -14,11 +14,11 @@ File::TVShow::Info - Perl meta data extractor from file name for TV Show file.
 
 =head1 VERSION
 
-Version 0.01.0.0
+Version 0.01.0.1
 
 =cut
 
-our $VERSION = '0.01.0.0';
+our $VERSION = '0.01.0.1';
 
 
 =head1 SYNOPSIS
