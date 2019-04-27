@@ -3,8 +3,10 @@ package File::TVShow::Info;
 use 5.10.0;
 use strict;
 use warnings;
+use File::TVShow::EpisodeName 0.02 qw (@episode_name_patterns);
+use File::TVShow::Networks 0.02 qw(@networks);
 
-use vars qw(@filePatterns @episode_name_patterns);
+use vars qw(@filePatterns);
 
 =head1 NAME
 
@@ -12,11 +14,11 @@ File::TVShow::Info - Perl meta data extractor from file name for TV Show file.
 
 =head1 VERSION
 
-Version 0.01
+Version 0.01.1.0
 
 =cut
 
-our $VERSION = '0.01';
+our $VERSION = '0.01.1.0';
 
 
 =head1 SYNOPSIS
@@ -58,28 +60,6 @@ If the file name is parsed and can not be identified as a TV show then L</is_tv_
           # Perl < v5.10
           re_compat => '^(?:(.*?)[\/\s._-]*)?\[?(\d{1,2})[x\/](\d{1,2})(?:-(?:\d{1,2}x)?(\d{1,2}))?\]?(?:[\s._-]*([^\/]+?))?[.](?<ext>(?:[a-z]{3}|[a-z]{2}[0-9]))$',
           keys_compat => [qw(show_name season episode endep extra_meta)],
-
-          test_funcs => [1, 1], # TV Episode
-          test_keys => [qw(filename show_name season episode endep extra_meta ext)],
-          test_files => [
-          ['Series Name.1x02.Episode_name.avi', 'Series Name', 1, 2, undef, 'Episode_name', 'avi'],
-          ['Series Name 1x02.Episode_name.avi', 'Series Name', 1, 2, undef, 'Episode_name', 'avi'],
-          ['Series Name.[1x02].Episode_name.avi', 'Series Name', 1, 2, undef, 'Episode_name', 'avi'],
-          ['Series Name.1x02-03.Episode_name.avi', 'Series Name', 1, 2, 3, 'Episode_name', 'avi'],
-          ['Series Name.1x02-1x03.Episode_name.avi', 'Series Name', 1, 2, 3, 'Episode_name', 'avi'],
-          ],
-        },
-);
-
-@episode_name_patterns = (
-        { # Matching name followed by resoltion (name.720p)
-          re => '^(?<episode_name>.*)[\s.]?(?:(?:\.|\ )[0-9]{3,4})(?:p|i)',
-        },
-        { # Matching name follwoed by source
-          re => '^(?<episode_name>.*)[\s.](AMZN|hdtv|SDTV)',
-        },
-        { # Matching name followed by web
-          re => '^(?<episode_name>.*)[\s.](web)',
         },
 );
 
@@ -144,6 +124,7 @@ Show resolution 480p/720p and so on. This will be '' if not found.
 File extension
 
 =back
+
 =cut
 
 sub new {
@@ -197,6 +178,7 @@ sub new {
     $self->_set_tvshow_organize_name();
     $self->_isolate_name_year();
     $self->_get_resolution();
+    $self->_get_network();
     $self->_get_release_group();
     $self->_is_tv_subtitle();
     $self->_get_subtitle_lang();
@@ -216,6 +198,46 @@ sub show_name {
     my $self = shift;
     my $attr = 'show_name';
     $self->__get_obj_attr($attr);
+}
+
+=head2 strip_show_name
+
+Return show_name after removing string delimiters
+
+=cut
+
+sub strip_show_name {
+
+    my $self = shift;
+
+    return if !$self->is_tv_show();
+
+    return $self->{show_name} if defined $self->{do_not_strip};
+    (my $newString = $self->{show_name}) =~ s/[\._-]/ /g;
+    return $newString;
+
+}
+
+=head2 clean_show_name
+
+Return complete show name with year and country in brackets if they exist.
+Also remove any delimiters, replaced with spaces
+
+=cut
+
+sub clean_show_name {
+
+    my $self = shift;
+
+    return if !$self->is_tv_show();
+
+    my $newString = $self->strip_show_name();
+    if ($self->has_year()) {
+      $newString .= ' (' . $self->year() . ')';
+    } elsif ($self->has_country()) {
+      $newString .= ' (' . $self->country() . ')';
+    }
+    return $newString;
 }
 
 =head2 original_show_name
@@ -250,6 +272,19 @@ sub season {
     $self->__get_obj_attr($attr);
 }
 
+=head2 season_to_int
+
+Return season as an integer
+
+=cut
+
+sub season_to_int {
+
+    my $self = shift;
+    return int($self->season()) if defined $self->{season};
+    return undef;
+}
+
 =head2 episode
 
 Return the episode found in the file name. Return '' if {episode} is not defined.
@@ -261,6 +296,19 @@ sub episode {
     my $self = shift;
     my $attr = 'episode';
     $self->__get_obj_attr($attr);
+}
+
+=head2 episode_to_int
+
+Return episode as an integer
+
+=cut
+
+sub episode_to_int {
+
+    my $self = shift;
+    return int($self->episode()) if defined $self->{episode};
+    return undef;
 }
 
 =head2 source
@@ -317,7 +365,7 @@ sub season_episode {
 
 =head2 has_year
 
-Returns 1 if year is defined else return 0
+Return 1 if year is defined else return 0
 
 =cut
 
@@ -398,6 +446,23 @@ sub resolution {
     $self->__get_obj_attr($attr);
 }
 
+#=head2 network
+
+#Return network if found '' if not defined.
+
+#Networks: AMZN, HULU, ABC and so on.
+
+#=cut
+
+sub _network {
+
+  my $self = shift;
+  my $attr = 'network';
+  $self->__get_obj_attr($attr);
+
+
+}
+
 =head2 release_group
 
 Return release_group found in the file name. Return '' if {release_group} is not defined.
@@ -427,9 +492,26 @@ sub episode_name {
     $self->__get_obj_attr($attr);
 }
 
+=head2 strip_episode_name
+
+Return episode name without delimiters.
+
+=cut
+
+sub strip_episode_name {
+
+    my $self = shift;
+
+    return if !$self->is_tv_show();
+
+    (my $newString = $self->{episode_name}) =~ s/[\._-]/ /g;
+    return $newString;
+
+}
+
 =head2 country
 
-Retrun country found in {show_name}. Return '' if not defined
+Return country found in {show_name}. Return '' if not defined
 
 =cut
 
@@ -477,7 +559,7 @@ sub is_tv_show {
 
 =head2 is_tv_subtitle
 
-Returns 1 if the file is a subtitle file, 0 if {is_subtitle} is not defined.
+Return 1 if the file is a subtitle file, 0 if {is_subtitle} is not defined.
 
 The file must also return true for is_tv_show() or the result is 0
 
@@ -509,7 +591,7 @@ sub has_subtitle_lang {
 
 =head2 subtitle_lang
 
-Returns the language of the subtitle file: eng or en. Return '' if {subtitle_lang} is not defined.
+Return the language of the subtitle file: eng or en. Return '' if {subtitle_lang} is not defined.
 
 =cut
 
@@ -600,7 +682,10 @@ sub _isolate_name_year {
     # Skip isolation if {show_name} is in the array @exceptions
     # We do not want to modify the file name.
     foreach (@exceptions) {
-      return if $self->{show_name} =~ m/$_/;
+      if ($self->{show_name} =~ m/$_/) {
+        $self->{do_not_strip} = 1;
+        return;
+      }
     }
 
     # break {show_name} from year
@@ -666,6 +751,22 @@ sub _get_release_group {
     }
 }
 
+sub _get_network {
+
+    my $self = shift;
+
+    return if !$self->is_tv_show() || !defined $self->{extra_meta};
+
+    #Build REGEX from array of Networks
+    my $regex = '(?P<network>';
+    $regex .= join('|', @networks);
+    $regex .= ')';
+    #my $regex = '(?P<network>ABC|AMZN|BBC|CBS|CC|CW|DCU|DSNY|FBWatch|FREE|FOX|HULU|iP|LIFE|MTV|NBC|NICK|FC|RED|TF1|STZ)';
+    if ($self->{extra_meta} =~ /$regex/gi) {
+      $self->{network} = $+{network};
+    }
+}
+
 sub _get_resolution {
 
     my $self = shift;
@@ -703,6 +804,8 @@ sub _get_country {
     # country strings. If not, we do not set {country}
     if (grep { $_ eq $1 } @{$self->{valid_countries}}) {
       $self->{country} = $+{country} || $1; # $1 equals group country
+      $self->{show_name} =~ s/\(?$1\)?//;
+      chop($self->{show_name});
     }
   }
 }
@@ -751,7 +854,7 @@ sub __get_obj_attr {
 
 =head1 AUTHOR
 
-Adam Spann, C<< <baspann at gmail.com> >>
+Adam Spann, C<< <bans at cpan.org> >>
 
 =head1 BUGS
 

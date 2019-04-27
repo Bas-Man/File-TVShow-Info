@@ -5,7 +5,7 @@ use ExtUtils::MakeMaker;
 
 WriteMakefile(
     NAME             => 'File::TVShow::Info',
-    AUTHOR           => q{Adam Spann <baspann@gmail.com>},
+    AUTHOR           => q{Adam Spann <bans@cpan.org>},
     VERSION_FROM     => 'lib/File/TVShow/Info.pm',
     ABSTRACT_FROM    => 'lib/File/TVShow/Info.pm',
     LICENSE          => 'perl_5',
@@ -15,11 +15,11 @@ WriteMakefile(
         'ExtUtils::MakeMaker' => '0',
     },
     BUILD_REQUIRES => {
-        'Test::More' => '0',
     },
     PREREQ_PM => {
-        #'ABC'              => '1.6',
-        #'Foo::Bar::Module' => '5.0401',
+    },
+    TEST_REQUIRES => {
+      'Test::More' => '0',
     },
     dist  => { COMPRESS => 'gzip -9f', SUFFIX => 'gz', },
     clean => { FILES => 'File-TVShow-Info-*' },
