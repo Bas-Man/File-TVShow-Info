@@ -1,6 +1,8 @@
 package File::TVShow::Networks;
 
 use 5.10.0;
+use strict;
+use warnings;
 
 require Exporter;
 our @ISA = qw ( Exporter );
@@ -12,11 +14,11 @@ File::TVShow::Networks - Array of Networks.
 
 =head1 VERSION
 
-Version 0.01
+Version 0.02
 
 =cut
 
-our $VERSION = '0.01';
+our $VERSION = '0.02';
 
 our @networks = qw ( ABC AMZN BBC CBS CC CW DCU DSNY FBWatch FREE FOX HULU iP LIFE MTV NBC NICK FC RED TF1 STZ );
 

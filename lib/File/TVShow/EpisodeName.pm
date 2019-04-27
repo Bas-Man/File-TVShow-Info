@@ -1,6 +1,8 @@
 package File::TVShow::EpisodeName;
 
 use 5.10.0;
+use strict;
+use warnings;
 
 require Exporter;
 our @ISA = qw ( Exporter );
@@ -12,11 +14,11 @@ File::TVShow::EpisodeName - Array of EpisodeName matching regexs.
 
 =head1 VERSION
 
-Version 0.01
+Version 0.02
 
 =cut
 
-our $VERSION = '0.01';
+our $VERSION = '0.02';
 
 our @episode_name_patterns = (
         { # Matching name followed by resoltion (name.720p)
