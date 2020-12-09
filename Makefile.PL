@@ -21,20 +21,22 @@ WriteMakefile(
     TEST_REQUIRES => {
       'Test::More' => '0',
     },
-    META_MERGE => {
+    (eval { ExtUtils::MakeMaker->VERSION(6.46)} ? (META_MERGE => {
     	'meta-spec' => { version => 2 },
-	resources => {
-		repository => {
-		  type => 'git',
-		  url => 'https://github.com/Bas-Man/File-TVShow-Info.git',
-		  web => 'https://github.com/Bas-Man/File-TVShow-Info',
-		},
-		bugtracker => {
-		  web => 'https://github.com/Bas-Man/File-TVShow-Info/issues',
-		},
-		homepage => 'https://bas-man.github.io',
-	},
-    },
+      resources => {
+        repository => {
+          type => 'git',
+          url => 'https://github.com/Bas-Man/File-TVShow-Info.git',
+          web => 'https://github.com/Bas-Man/File-TVShow-Info',
+        },
+        bugtracker => {
+          web => 'https://github.com/Bas-Man/File-TVShow-Info/issues',
+        },
+        homepage => 'https://bas-man.github.io',
+      },
+    })
+      : ()
+    ),
     dist  => { COMPRESS => 'gzip -9f', SUFFIX => 'gz', },
     clean => { FILES => 'File-TVShow-Info-*' },
 );
