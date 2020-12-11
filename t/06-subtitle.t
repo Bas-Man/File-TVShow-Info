@@ -5,7 +5,7 @@ use warnings;
 use Test::More;
 use Data::Dumper;
 
-unless ( $ENV{DEV_TESTING} ) {
+unless (( $ENV{DEV_TESTING} ) || ( $ENV{AUTOMATED_TESTING} )) {
     plan( skip_all => "Author tests not required for installation" );
 } else {
   use File::TVShow::Info;
