@@ -23,7 +23,7 @@ SUPPORT AND DOCUMENTATION
 After installing, you can find documentation for this module with the
 perldoc command.
 
-    perldoc File::TVShow::Info
+	perldoc File::TVShow::Info
 
 You can also look for information at:
 
@@ -32,13 +32,13 @@ You can also look for information at:
 	https://github.com/Bas-Man/File-TVShow-Info/issues
 
 	RT, CPAN's request tracker (report bugs here)
-        https://rt.cpan.org/NoAuth/Bugs.html?Dist=File-TVShow-Info
+	https://rt.cpan.org/NoAuth/Bugs.html?Dist=File-TVShow-Info
 
 	CPAN Ratings
-        https://cpanratings.perl.org/d/File-TVShow-Info
+	https://cpanratings.perl.org/d/File-TVShow-Info
 
 	Search CPAN
-        https://metacpan.org/release/File-TVShow-Info
+	https://metacpan.org/release/File-TVShow-Info
 
 
 LICENSE AND COPYRIGHT
