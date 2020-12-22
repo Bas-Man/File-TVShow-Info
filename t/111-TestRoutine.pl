@@ -88,7 +88,7 @@ sub testVideoFilename {
         @get_funcs = qw(show_name year month date);
       }
 
-      print "Testing $test_case->{name}\n";
+      print "Testing: $test_case->{name}\n";
       for my $test (@{$test_case->{test_files}}) {
         my $file = File::TVShow::Info->new($test->[0]);
         # Make the correct rule fired
